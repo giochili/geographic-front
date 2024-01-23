@@ -1,0 +1,55 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* src/Styles/Qarsafari/mainIndex.css */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5; /* Set your desired background color */
+}
+
+.link {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff; /* Set your desired text color */
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.cart-background {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/Qarsafari/pexels-michael-block-3225517.jpg")
+    center/cover no-repeat; /* Replace with the actual path to your image */
+  transition: transform 0.3s ease;
+}
+
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff; /* Set your desired text color */
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.link:hover .cart-background {
+  transform: scale(1.1); /* Set your desired zoom factor */
+}
+
+/* .link:hover {
+  background-color: #2980b9; /* Set your desired hover color 
+}*/
