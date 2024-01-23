@@ -70,8 +70,6 @@ const Qarsafari = ({ cardDataArray }) => {
             onChange={(e) => setPhotoStartCountingNumber(e.target.value)}
           />
         </div>
-        start: {folderStartCountingNumber}
-        start: {photoStartCountingNubmer}
         {/* Fourth Row: Two Buttons */}
         <div className="row">
           <button onClick={handleSubmit}>გადანომვრა</button>
