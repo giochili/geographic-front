@@ -1,19 +1,21 @@
 import React from "react";
 import { useState } from "react";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/qarsafari.css";
 import axios from "axios";
 
 const Qarsafari = ({ cardDataArray }) => {
-  const [excelPath, setExcelPath] = useState([]);
+  const [folderPath, setFolderPath] = useState(
+    "D:\\Documents\\Desktop\\ფოტოები"
+  );
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
   const apiUrl = "https://localhost:7055/RenamePhotosInFolder";
 
   const handleSubmit = async () => {
     const payload = {
-      excelPath: excelPath,
+      folderPath: folderPath,
       folderStartNumber: folderStartCountingNumber,
       photoStartNumber: photoStartCountingNubmer,
     };
@@ -32,14 +34,15 @@ const Qarsafari = ({ cardDataArray }) => {
           <div className="flex">
             <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
             <input
-              className="excelfileinput"
-              type="file"
-              accept=".xlsx, .xls"
-              onChange={(e) => setExcelPath(e.target.value)}
-              value={excelPath}
+              // className="folderfileinput"
+              // type="file"
+              onChange={(e) => setFolderPath(e.target.value)}
+              value={folderPath}
+              // directory=""
+              // webkitdirectory=""
+              type="text"
             />
           </div>
-
           <div className="flex">
             <div>
               <input type="checkbox" id="myCheckbox" />
