@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/qarsafari.css";
 import axios from "axios";
 
-const Qarsafari = ({ cardDataArray }) => {
+const Gadanomvra = ({ cardDataArray }) => {
   const [folderPath, setFolderPath] = useState(
     "D:\\Documents\\Desktop\\ფოტოები"
   );
+  const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
   const apiUrl = "https://localhost:7055/RenamePhotosInFolder";
@@ -18,18 +19,19 @@ const Qarsafari = ({ cardDataArray }) => {
       folderPath: folderPath,
       folderStartNumber: folderStartCountingNumber,
       photoStartNumber: photoStartCountingNubmer,
+      Gadanomrilia: gadanomrilia,
     };
     const response = await axios.post(apiUrl, payload);
   };
   return (
     <div className="parent-container">
       {/* Top Arrow Button */}
-      <Link className="back-button" to="/">
-        &#8592; Back to Main
-      </Link>
 
-      {/* Qarsafari Component */}
+      {/* Gadanomvra Component */}
       <div className="main-container">
+        <Link className="back-button" to="/qarsafariNavigator">
+          &#8592; უკან
+        </Link>
         <div className="row">
           <div className="flex">
             <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
@@ -45,7 +47,12 @@ const Qarsafari = ({ cardDataArray }) => {
           </div>
           <div className="flex">
             <div>
-              <input type="checkbox" id="myCheckbox" />
+              <input
+                value={gadanomrilia}
+                onChange={(e) => setGadanomrilia(e.target.checked)}
+                type="checkbox"
+                id="myCheckbox"
+              />
 
               <label htmlFor="myCheckbox" style={{ fontSize: "12px" }}>
                 გადანომრილია
@@ -83,4 +90,4 @@ const Qarsafari = ({ cardDataArray }) => {
   );
 };
 
-export default Qarsafari;
+export default Gadanomvra;

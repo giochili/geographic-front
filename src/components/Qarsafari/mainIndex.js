@@ -5,9 +5,9 @@ import "../../Styles/Qarsafari/mainIndex.css";
 const MainPage = ({ cardDataArray }) => {
   return (
     <div className="main-container">
-      <Link className="link" to="/qarsafari">
+      <Link className="link" to="/qarsafariNavigator">
         <div className="cart-background">
-          <div className="text">Qarsafari</div>
+          <div className="text">ქარსაფარი</div>
         </div>
       </Link>
     </div>
