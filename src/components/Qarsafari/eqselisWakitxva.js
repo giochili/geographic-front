@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 
 const EqselisWakitxva = () => {
-  const [UnicID, setUnicID] = useState();
+  const [UnicID, setUnicID] = useState(0);
   const excelFilePath = async (e) => {
     try {
       const file = e.target.files[0];
@@ -23,18 +23,18 @@ const EqselisWakitxva = () => {
       alert("Error reading Excel file:", error);
     }
   };
-  const [demoExcelPath, setDemoExcelPath] = useState(
-    "D:DocumentsDesktopფოტოები"
+  const [ExcelPath, setExcelPath] = useState(
+    "D:\\Projects\\qarsafrebi\\დუშეთი\\testexcel.xls"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
-    "D:DocumentsDesktopფოტოები"
+    "D:\\Documents\\Desktop\\ფოტოები"
   );
-  const [accessFilePath, setAccessFilePath] = useState();
+  const [accessFilePath, setAccessFilePath] = useState("");
   const apiUrl = "https://localhost:7055/ExcelCalculations";
   const handleSubmit = async () => {
     const payload = {
       UnicIDStartNumber: UnicID,
-      ExcelPath: demoExcelPath,
+      ExcelPath: ExcelPath,
       ExcelDestinationPath: newExcelDestination,
       AccessFilePath: accessFilePath,
     };

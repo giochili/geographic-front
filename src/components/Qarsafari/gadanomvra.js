@@ -63,6 +63,10 @@ const Gadanomvra = ({ cardDataArray }) => {
         {/* Second Row: Paragraph and Input */}
         <div className="row">
           <p>საიდან დავიწყოთ ფოლდერების გადანომვრა</p>
+          <h1 style={{ background: "#abbcf1", width: "200px" }}>
+            {" "}
+            Hover on me{" "}
+          </h1>
           <input
             type="number"
             placeholder="Input"
