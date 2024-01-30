@@ -22,6 +22,8 @@ const Gadanomvra = ({ cardDataArray }) => {
       Gadanomrilia: gadanomrilia,
     };
     const response = await axios.post(apiUrl, payload);
+    if (response.data.Success) {
+    }
   };
   return (
     <div className="parent-container">
@@ -42,6 +44,7 @@ const Gadanomvra = ({ cardDataArray }) => {
               value={folderPath}
               // directory=""
               // webkitdirectory=""
+              title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
               type="text"
             />
           </div>
@@ -63,15 +66,12 @@ const Gadanomvra = ({ cardDataArray }) => {
         {/* Second Row: Paragraph and Input */}
         <div className="row">
           <p>საიდან დავიწყოთ ფოლდერების გადანომვრა</p>
-          <h1 style={{ background: "#abbcf1", width: "200px" }}>
-            {" "}
-            Hover on me{" "}
-          </h1>
           <input
             type="number"
-            placeholder="Input"
+            placeholder="შეიყვანეთ რიცხვი"
             value={folderStartCountingNumber}
             onChange={(e) => setFolderStartCountingNumber(e.target.value)}
+            title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა ფოლდერების."
           />
         </div>
         {/* Third Row: Paragraph and Input */}
@@ -80,14 +80,17 @@ const Gadanomvra = ({ cardDataArray }) => {
           <input
             value={photoStartCountingNubmer}
             type="number"
-            placeholder="Input"
+            placeholder="შეიყვანეთ რიცხვი"
             onChange={(e) => setPhotoStartCountingNumber(e.target.value)}
+            title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოტოების გადანომვრა."
           />
         </div>
         {/* Fourth Row: Two Buttons */}
         <div className="row">
           <button onClick={handleSubmit}>გადანომვრა</button>
-          <button>გადავიფიქრე</button>
+          <Link className="gadavifiqre-btn" to={"/qarsafariNavigator"}>
+            გადავიფიქრე
+          </Link>
         </div>
       </div>
     </div>

@@ -60,3 +60,12 @@
 /* .link:hover {
   background-color: #2980b9; /* Set your desired hover color 
 }*/
+.gadavifiqre-btn {
+  text-decoration: none;
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

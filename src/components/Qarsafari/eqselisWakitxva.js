@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -24,23 +24,39 @@ const EqselisWakitxva = () => {
     }
   };
   const [ExcelPath, setExcelPath] = useState(
-    "D:\\Projects\\qarsafrebi\\დუშეთი\\testexcel.xls"
+    "D:\\Projects\\qarsafrebi\\დუშეთი\\დიდი-დუშეთი.xlsx"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
     "D:\\Documents\\Desktop\\ფოტოები"
   );
   const [accessFilePath, setAccessFilePath] = useState("");
-  const apiUrl = "https://localhost:7055/ExcelCalculations";
+  const [options, setOptions] = useState([]);
+  const [projectNameID, setProjectNameID] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = "https://localhost:7055/GetProjectNamesList";
+        const response = await axios.get(apiUrl);
+        setOptions(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleSubmit = async () => {
+    const apiUrl = "https://localhost:7055/ExcelCalculations";
     const payload = {
       UnicIDStartNumber: UnicID,
       ExcelPath: ExcelPath,
       ExcelDestinationPath: newExcelDestination,
       AccessFilePath: accessFilePath,
+      ProjectNameID: projectNameID,
     };
     const response = await axios.post(apiUrl, payload);
   };
-
   return (
     <div className="Main-for-eqselisWakitxva">
       <div className="obtainer">
@@ -53,15 +69,17 @@ const EqselisWakitxva = () => {
             type="file"
             accept=".xlsx"
             onChange={(e) => excelFilePath(e)}
+            title="ამოირჩიეთ ექსელის ფაილი."
           />
         </div>
         <div className="row-excel">
           <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
           <input
-            placeholder="insert number"
+            placeholder="შეიყვანეთ რიცხვი"
             value={UnicID}
             type="number"
             onChange={(e) => setUnicID(e.target.value)}
+            title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."
           />
         </div>
         <div className="row-excel">
@@ -72,8 +90,9 @@ const EqselisWakitxva = () => {
           <input
             // value={newExcelDestination}
             type="text"
-            placeholder="insert path"
+            placeholder="შეავსეთ მისამართი"
             // onChange={(e) => setNewExcelDestination(e.target.value)}
+            title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
           />
         </div>
         <div className="row-excel">
@@ -84,11 +103,32 @@ const EqselisWakitxva = () => {
             type="file"
             accept=".mdb"
             placeholder="insert path"
+            title="ამოირჩიეთ access ფაილი."
           />
+        </div>
+        <div className="row-excel">
+          <label>ამოირჩიეთ მუნიციპალიტეტი</label>
+          <select
+            title="აირჩიეთ მუნიციპალიტეტი"
+            onChange={(e) => setProjectNameID(e.target.value)}
+          >
+            <option value={0}></option>
+            {options.map((option) => (
+              <option
+                title="აირჩიეთ მუნიციპალიტეტი "
+                key={option.id}
+                value={option.id}
+              >
+                {option.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="row-excel-buttons">
           <button onClick={handleSubmit}> გაშვება </button>
-          <button>გადავიფიქრე</button>
+          <Link className="gadavifiqre-btn" to="/qarsafariNavigator">
+            გადავიფიქრე
+          </Link>
         </div>
       </div>
     </div>
