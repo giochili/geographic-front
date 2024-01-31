@@ -24,13 +24,17 @@ const EqselisWakitxva = () => {
     }
   };
   const [ExcelPath, setExcelPath] = useState(
-    "D:\\Projects\\qarsafrebi\\დუშეთი\\დიდი-დუშეთი.xlsx"
+    "D:\\Projects\\qarsafrebi\\დუშეთი\\დუშეთი.xlsx"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
     "D:\\Documents\\Desktop\\ფოტოები"
   );
-  const [accessFilePath, setAccessFilePath] = useState("");
+  const [accessFilePath, setAccessFilePath] = useState(
+    "D:\\Projects\\qarsafrebi\\kaspi\\final\\Kaspi_Windbreak-მესამე-ატაცი.mdb"
+  );
+  const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
+  const [accessShitName, setAccessShitName] = useState("Kaspi_Windbreak_State");
   const [projectNameID, setProjectNameID] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +58,8 @@ const EqselisWakitxva = () => {
       ExcelDestinationPath: newExcelDestination,
       AccessFilePath: accessFilePath,
       ProjectNameID: projectNameID,
+      CalcVarjisFartiCheckbox: calcVarjisFarti,
+      AccessShitName: accessShitName,
     };
     const response = await axios.post(apiUrl, payload);
   };
@@ -71,6 +77,20 @@ const EqselisWakitxva = () => {
             onChange={(e) => excelFilePath(e)}
             title="ამოირჩიეთ ექსელის ფაილი."
           />
+        </div>
+        <div className="row-excel">
+          <div>
+            <input
+              value={calcVarjisFarti}
+              onChange={(e) => setCalcVarjisFarti(e.target.checked)}
+              type="checkbox"
+              id="myCheckbox"
+            />
+
+            <label htmlFor="myCheckbox" style={{ fontSize: "12px" }}>
+              დავთვალოთ ვარჯის ფართები ?
+            </label>
+          </div>
         </div>
         <div className="row-excel">
           <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
@@ -98,8 +118,14 @@ const EqselisWakitxva = () => {
         <div className="row-excel">
           <label>ამოირჩიეთ access ფაილი</label>
           <input
-            value={accessFilePath}
-            onChange={(e) => setAccessFilePath(e.target.value)}
+            type="text"
+            value={accessShitName}
+            onChange={(e) => setAccessShitName(e.target.value)}
+            placeholder="შეიყვანეთ შიტის სახელი"
+          />
+          <input
+            // value={accessFilePath}
+            // onChange={(e) => setAccessFilePath(e.target.value)}
             type="file"
             accept=".mdb"
             placeholder="insert path"
