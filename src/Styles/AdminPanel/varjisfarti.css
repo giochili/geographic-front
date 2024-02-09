@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.Main-Container {
+  display: flex;
+  height: 100vh;
+  max-width: 100vw;
+}
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.styled-table th,
+.styled-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.styled-table th {
+  background-color: #f2f2f2;
+}
+
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+  width: 100%;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #ddd;
+}
+.row-excel {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  width: 100%;
+  padding: 100px;
+}
+.delete.btn {
+  background-color: red;
+}
+th {
+  width: 100%;
+}
+td {
+  width: 100%;
+}

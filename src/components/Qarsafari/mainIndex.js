@@ -10,6 +10,11 @@ const MainPage = ({ cardDataArray }) => {
           <div className="text">ქარსაფარი</div>
         </div>
       </Link>
+      <Link className="link" to="/SideBarPanel">
+        <div className="cart-background">
+          <div className="text">Sidebar</div>
+        </div>
+      </Link>
     </div>
   );
 };

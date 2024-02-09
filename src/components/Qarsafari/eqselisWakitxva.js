@@ -24,17 +24,17 @@ const EqselisWakitxva = () => {
     }
   };
   const [ExcelPath, setExcelPath] = useState(
-    "D:\\Projects\\qarsafrebi\\დუშეთი\\დუშეთი.xlsx"
+    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
     "D:\\Documents\\Desktop\\ფოტოები"
   );
   const [accessFilePath, setAccessFilePath] = useState(
-    "D:\\Projects\\qarsafrebi\\kaspi\\final\\Kaspi_Windbreak-მესამე-ატაცი.mdb"
+    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
   );
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Kaspi_Windbreak_State");
+  const [accessShitName, setAccessShitName] = useState("Windbreak");
   const [projectNameID, setProjectNameID] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
