@@ -9,7 +9,6 @@ const EqselisWakitxva = () => {
   const excelFilePath = async (e) => {
     try {
       const file = e.target.files[0];
-
       if (!file) {
         // User canceled file selection
         return;

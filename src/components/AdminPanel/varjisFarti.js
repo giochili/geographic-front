@@ -6,7 +6,7 @@ import makeData from "../ReactTable/makeData";
 import Table from "../../components/ReactTable/Table";
 import { randomColor, shortId } from "../../components/ReactTable/utils";
 import axios from "axios";
-import SaxeobaTable from "./";
+import SaxeobaTable from "./saxeobebiTable";
 function reducer(state, action) {
   switch (action.type) {
     case "add_option_to_column":

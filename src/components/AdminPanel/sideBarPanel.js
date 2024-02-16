@@ -6,6 +6,7 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import "../../Styles/AdminPanel/SidebarPanel.css";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 function SideBarPanel() {
@@ -17,7 +18,7 @@ function SideBarPanel() {
         collapsed={collapsed}
         onCollapse={setCollapsed}
       >
-        <Menu>
+        {/* <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}
             onClick={() => {
@@ -28,15 +29,37 @@ function SideBarPanel() {
             {" "}
             <h2>Sidebar</h2>
           </MenuItem>
-
-          <MenuItem icon={<HomeOutlinedIcon />}>
-            <NavLink to="/Varjisfarti">Excel</NavLink>
-          </MenuItem>
-          <MenuItem icon={<PeopleOutlinedIcon />}>Team</MenuItem>
+          <NavLink to="/SideBarPanel/Varjisfarti">
+            <MenuItem icon={<HomeOutlinedIcon />}>ვარჯის ფართები</MenuItem>
+          </NavLink>
+          <NavLink className={"navLink"} to={"/SideBarPanel/ExcelExport"}>
+            <MenuItem icon={<PeopleOutlinedIcon />}>Excel </MenuItem>
+          </NavLink>
           <MenuItem icon={<ContactsOutlinedIcon />}>Contacts</MenuItem>
           <MenuItem icon={<ReceiptOutlinedIcon />}>Profile</MenuItem>
           <MenuItem icon={<HelpOutlineOutlinedIcon />}>FAQ</MenuItem>
           <MenuItem icon={<CalendarTodayOutlinedIcon />}>Calendar</MenuItem>
+        </Menu> */}
+        <Menu>
+          <MenuItem
+            icon={<MenuOutlinedIcon />}
+            onClick={() => {
+              setCollapsed(!collapsed);
+            }}
+            style={{ textAlign: "center" }}
+          >
+            <h2>Sidebar</h2>
+          </MenuItem>
+          <NavLink className="navLink" to="/">
+            <MenuItem icon={<HomeOutlinedIcon />}>მთავარი</MenuItem>
+          </NavLink>
+
+          <NavLink className="navLink" to="/SideBarPanel/ExcelExport">
+            <MenuItem icon={<PeopleOutlinedIcon />}>Excel </MenuItem>
+          </NavLink>
+          <NavLink className="navLink" to="/SideBarPanel/Varjisfarti">
+            <MenuItem icon={<ContactsOutlinedIcon />}>ვარჯის ფართები</MenuItem>
+          </NavLink>
         </Menu>
       </Sidebar>
     </div>

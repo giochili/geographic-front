@@ -24,6 +24,7 @@ export default function Table({
   data,
   dispatch: dataDispatch,
   skipReset,
+  enableColumnOrdering,
 }) {
   const sortTypes = useMemo(
     () => ({
@@ -58,9 +59,10 @@ export default function Table({
         autoResetSortBy: !skipReset,
         autoResetFilters: !skipReset,
         autoResetRowState: !skipReset,
+        enableColumnOrdering,
         sortTypes,
         initialState: {
-          hiddenColumns: ["areaNameId", "saxeobaId", "id"],
+          hiddenColumns: ["areaNameId", "saxeobaId", "id", "code"],
         },
       },
       useFlexLayout,

@@ -10,7 +10,7 @@ const MainPage = ({ cardDataArray }) => {
           <div className="text">ქარსაფარი</div>
         </div>
       </Link>
-      <Link className="link" to="/SideBarPanel">
+      <Link className="link" to="/SideBarPanel/Varjisfarti">
         <div className="cart-background">
           <div className="text">Sidebar</div>
         </div>
