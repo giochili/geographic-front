@@ -60,6 +60,9 @@ function SideBarPanel() {
           <NavLink className="navLink" to="/SideBarPanel/Varjisfarti">
             <MenuItem icon={<ContactsOutlinedIcon />}>ვარჯის ფართები</MenuItem>
           </NavLink>
+          <NavLink className="navLink" to="/SideBarPanel/QarsafariGroup">
+            <MenuItem icon={<HelpOutlineOutlinedIcon />}>დაგრუპვა</MenuItem>
+          </NavLink>
         </Menu>
       </Sidebar>
     </div>

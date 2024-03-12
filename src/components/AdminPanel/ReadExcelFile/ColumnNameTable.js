@@ -2,6 +2,7 @@ import Table from "../../ReactTable/Table";
 import React, { useEffect, useReducer, useState } from "react";
 import { randomColor, shortId } from "../../../components/ReactTable/utils";
 import axios from "axios";
+import "../../../Styles/AdminPanel/Loader.css";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -239,7 +240,7 @@ const ColumnNameTable = (ExcelOptions) => {
       id: "sqlname",
       label: "sqlname",
       accessor: "sqlname",
-      minWidth: 100,
+      minWidth: 250,
       dataType: "text",
       options: [],
     },
@@ -268,7 +269,11 @@ const ColumnNameTable = (ExcelOptions) => {
             try {
               const apiUrl = "https://localhost:7055/GetSQLColumnNamesList";
               const response = await axios.get(apiUrl);
-              setOptions(response.data.data);
+              const filteredData = response.data.data.filter((item) => {
+                return item.excelName !== null;
+              });
+
+              setOptions(filteredData);
             } catch (error) {
               console.error("Error fetching data:", error);
             }
@@ -276,11 +281,21 @@ const ColumnNameTable = (ExcelOptions) => {
           fetchData();
         }, []);
         return (
-          <select value={selectedValue} onChange={handleChange}>
+          <select
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              margin: "5px",
+            }}
+            value={selectedValue}
+            onChange={handleChange}
+          >
             <option value={0}></option>
 
-            {ExcelOptions.length > 0
-              ? ExcelOptions.map((option) => (
+            {ExcelOptions.ExcelOptions.length > 0
+              ? ExcelOptions.ExcelOptions.map((option) => (
                   <option key={option.excelName} value={option.excelName}>
                     {option.excelName}
                   </option>
@@ -304,6 +319,124 @@ const ColumnNameTable = (ExcelOptions) => {
       },
     },
     {
+      id: "AccessName",
+      label: "AccessName",
+      accessor: "accessName",
+      minWidth: 100,
+      dataType: "text",
+      options: [],
+      Cell: ({ row }) => {
+        const [accessOptions, setAccessOptions] = useState([]);
+        const handleChange = (event) => {
+          setSelectedValue(event.target.value);
+          row.original.accessName = event.target.value;
+        };
+
+        const [selectedValue, setSelectedValue] = useState(
+          row.original.accessName
+        );
+        useEffect(() => {
+          setSelectedValue(row.original.accessName);
+        }, [row.original.accessName]);
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const apiUrl = "https://localhost:7055/GetSQLColumnNamesList";
+              const response = await axios.get(apiUrl);
+              const filteredData = response.data.data.filter((item) => {
+                return item.accessName !== null;
+              });
+              setAccessOptions(filteredData);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+          };
+          fetchData();
+        }, []);
+        return (
+          <select
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              margin: "5px",
+            }}
+            value={selectedValue}
+            onChange={handleChange}
+          >
+            <option value={0}></option>
+
+            {ExcelOptions.AccessOptions.length > 0
+              ? ExcelOptions.AccessOptions.map((option) => (
+                  <option key={option.accessName} value={option.accessName}>
+                    {option.accessName}
+                  </option>
+                ))
+              : accessOptions.map((option) => (
+                  <option key={option.id} value={option.accessName}>
+                    {option.accessName}
+                  </option>
+                ))}
+          </select>
+        );
+      },
+    },
+    {
+      id: "IsAccessToExcel",
+      label: "",
+      accessor: "IsAccessToExcel",
+      maxWidth: 40,
+      dataType: "checkbox",
+      options: [],
+      Cell: ({ row }) => {
+        const [sQLColumnNamesList, setSQLColumnNamesList] = useState();
+
+        const handleChangeCheckbox = (event) => {
+          setSelectedValue(event.target.value);
+          row.original.isAccessToExcel = event.target.checked;
+        };
+        const [selectedValue, setSelectedValue] = useState(
+          row.original.isAccessToExcel
+        );
+        useEffect(() => {
+          setSelectedValue(row.original.isAccessToExcel);
+        }, [row.original.isAccessToExcel]);
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const apiUrl = "https://localhost:7055/GetSQLColumnNamesList";
+              const response = await axios.get(apiUrl);
+              const filteredData = response.data.data.filter((item) => {
+                return item.accessName !== null;
+              });
+              setSQLColumnNamesList(filteredData);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+          };
+          fetchData();
+        }, []);
+
+        return (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={selectedValue}
+              onChange={handleChangeCheckbox}
+            />
+          </div>
+        );
+      },
+    },
+    {
       id: "Sort",
       label: "Sort",
       accessor: "Sort",
@@ -319,7 +452,7 @@ const ColumnNameTable = (ExcelOptions) => {
       dataType: "text",
       options: [],
       Cell: ({ row }) => {
-        const [selectedValue, setSelectedValue] = useState("");
+        const [selectedValue, setSelectedValue] = useState(false);
 
         const handleDataTypeChange = (event) => {
           setSelectedValue(event.target.value);
@@ -329,7 +462,17 @@ const ColumnNameTable = (ExcelOptions) => {
         // Conditionally render the dropdown only for new rows
         if (!row.original.id) {
           return (
-            <select value={selectedValue} onChange={handleDataTypeChange}>
+            <select
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                margin: "5px",
+              }}
+              value={selectedValue}
+              onChange={handleDataTypeChange}
+            >
               <option value=""></option>
               <option value="ტექსტური">ტექსტური</option>
               <option value="რიცხვითი">რიცხვითი</option>
@@ -337,8 +480,76 @@ const ColumnNameTable = (ExcelOptions) => {
             </select>
           );
         } else {
-          return <div>{row.original.dataType}</div>; // Display the existing value for existing rows
+          return (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                margin: "5px",
+              }}
+            >
+              {row.original.dataType}
+            </div>
+          ); // Display the existing value for existing rows
         }
+      },
+    },
+    {
+      id: "delete",
+      label: "",
+      accessor: "delete",
+      maxWidth: 100,
+      dataType: "text",
+      options: [],
+
+      Cell: ({ row }) => {
+        const handleDeleteRow = async () => {
+          const confirmed = window.confirm(
+            "დარწმუნებული ხართ რომ გსურთ წაშლა ? "
+          );
+
+          // If the user confirms, proceed with deletion
+          if (confirmed) {
+            const apiUrl = "https://localhost:7055/DeleteRow";
+            const payload = {
+              Id: row.original.id,
+            };
+
+            try {
+              const response = await axios.post(apiUrl, payload);
+              // If deletion is successful, refresh the page
+              if (response.status === 200) {
+                window.location.reload();
+              } else {
+                // Handle other response statuses if needed
+                console.error("Deletion failed");
+              }
+            } catch (error) {
+              console.error("Error occurred during deletion:", error);
+              // Handle error cases as needed
+            }
+          }
+        };
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              margin: "5px",
+            }}
+          >
+            <button
+              onClick={handleDeleteRow}
+              style={{ backgroundColor: "red" }}
+            >
+              წაშლა
+            </button>
+          </div>
+        );
       },
     },
   ];
@@ -352,12 +563,61 @@ const ColumnNameTable = (ExcelOptions) => {
     columns: columns,
     // Add other state properties if needed
   };
+  const [loading, setLoading] = useState(false);
+  // const handleButtonSave = () => {
+
+  //   //აქ იწერება ვალიდაცია იმისთვის რომ შემოწმდეს არის თუ არა არჩეული ორი ან მეტი ექსელის სახელი
+  //   const excelNameSet = new Set();
+  //   let hasDuplicates = false;
+
+  //   var ExcelData = state.data.filter((item) => {
+  //     return item.excelName != null;
+  //   });
+
+  //   ExcelData.forEach((item) => {
+  //     if (excelNameSet.has(item.excelName)) {
+  //       hasDuplicates = true;
+  //       return; // Exit forEach loop early if duplicate found
+  //     }
+  //     excelNameSet.add(item.excelName);
+  //   });
+
+  //   if (hasDuplicates) {
+  //     alert(
+  //       "Duplicate excelName values found. Cannot proceed with post method."
+  //     );
+  //     return; // Exit the function if duplicates found
+  //   }
+  //   //ხდება დაგაწოდება პარამეტრების ბექში
+  //   const payLoad = {
+  //     columnNameDTO: state.data.map((item) => ({
+  //       ID: item.id,
+  //       Sqlname: item.sqlname,
+  //       ExcelName: item.excelName,
+  //       AccessName: item.accessName,
+  //       SortValue: item.shortValue,
+  //       DataType: item.dataType,
+  //       IsAccessToExcel: item.isAccessToExcel,
+  //     })),
+  //   };
+  //   // უშუალოდ მეთოდი სად და რეები უნდა წავიდეს
+
+  //   axios
+  //     .post("https://localhost:7055/SaveColumnName", payLoad.columnNameDTO)
+  //     .then((response) => {
+  //       console.log(response);
+  //       //setData(response.data)
+  //     });
+  // };
 
   const handleButtonSave = () => {
-    //აქ იწერება ვალიდაცია იმისთვის რომ შემოწმდეს არის თუ არა არჩეული ორი ან მეტი ექსელის სახელი
+    // Validate if there are any duplicate excelName values
     const excelNameSet = new Set();
     let hasDuplicates = false;
-    state.data.forEach((item) => {
+
+    const ExcelData = state.data.filter((item) => item.excelName != null);
+
+    ExcelData.forEach((item) => {
       if (excelNameSet.has(item.excelName)) {
         hasDuplicates = true;
         return; // Exit forEach loop early if duplicate found
@@ -371,25 +631,42 @@ const ColumnNameTable = (ExcelOptions) => {
       );
       return; // Exit the function if duplicates found
     }
-    //ხდება დაგაწოდება პარამეტრების ბექში
+
+    // Construct payload
     const payLoad = {
       columnNameDTO: state.data.map((item) => ({
         ID: item.id,
         Sqlname: item.sqlname,
         ExcelName: item.excelName,
+        AccessName: item.accessName,
         SortValue: item.shortValue,
         DataType: item.dataType,
+        IsAccessToExcel: item.isAccessToExcel,
       })),
     };
-    // უშუალოდ მეთოდი სად და რეები უნდა წავიდეს
 
-    axios
-      .post("https://localhost:7055/SaveColumnName", payLoad.columnNameDTO)
-      .then((response) => {
-        console.log(response);
-        //setData(response.data)
-      });
+    // Ask for confirmation before proceeding
+    const confirmed = window.confirm("გსურთ დამახსოვრება ცვლილებების ?");
+
+    // If the user confirms, proceed with the save
+    if (confirmed) {
+      // Perform POST request to save changes
+      axios
+        .post("https://localhost:7055/SaveColumnName", payLoad.columnNameDTO)
+        .then((response) => {
+          console.log(response);
+          // Optionally, handle response or update state
+          // setData(response.data)
+          // Refresh the page
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Error occurred during save:", error);
+          // Optionally, handle error cases
+        });
+    }
   };
+
   const [state, dispatch] = useReducer(reducer, initialState); // ამას იმისთვის ვაკეთებთ რომ თავიდან სთეითში დატა იყოს ცარიელი ცხრილი რომ დახატოს
 
   const [options, setOptions] = useState([]);

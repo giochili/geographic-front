@@ -26,7 +26,7 @@ const EqselisWakitxva = () => {
     "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
-    "D:\\Documents\\Desktop\\ფოტოები"
+    "D:\\Documents\\Desktop\\resultoftest"
   );
   const [accessFilePath, setAccessFilePath] = useState(
     "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
@@ -35,6 +35,9 @@ const EqselisWakitxva = () => {
   const [options, setOptions] = useState([]);
   const [accessShitName, setAccessShitName] = useState("Windbreak");
   const [projectNameID, setProjectNameID] = useState(0);
+  const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
+    useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,22 +53,36 @@ const EqselisWakitxva = () => {
   }, []);
 
   const handleSubmit = async () => {
-    const apiUrl = "https://localhost:7055/ExcelCalculations";
-    const payload = {
-      UnicIDStartNumber: UnicID,
-      ExcelPath: ExcelPath,
-      ExcelDestinationPath: newExcelDestination,
-      AccessFilePath: accessFilePath,
-      ProjectNameID: projectNameID,
-      CalcVarjisFartiCheckbox: calcVarjisFarti,
-      AccessShitName: accessShitName,
-    };
-    const response = await axios.post(apiUrl, payload);
+    try {
+      setLoading(true);
+      setIsDisabledGashvebaButton(true);
+      const apiUrl = "https://localhost:7055/ExcelCalculations";
+      const payload = {
+        UnicIDStartNumber: UnicID,
+        ExcelPath: ExcelPath,
+        ExcelDestinationPath: newExcelDestination,
+        AccessFilePath: accessFilePath,
+        ProjectNameID: projectNameID,
+        CalcVarjisFartiCheckbox: calcVarjisFarti,
+        AccessShitName: accessShitName,
+      };
+      const response = await axios.post(apiUrl, payload);
+      if (response.data.Success) {
+        alert("წარმატებით დასრულდა");
+      } else {
+        alert("არ წარმატებით დასრულდა" + response.data.Message);
+      }
+      setIsDisabledGashvebaButton(false);
+      setLoading(false);
+    } catch (error) {
+      setIsDisabledGashvebaButton(false);
+      setLoading(false);
+    }
   };
   return (
     <div className="Main-for-eqselisWakitxva">
       <div className="obtainer">
-        <div className="row-excel">
+        <div className="row-excel1">
           <Link className="back-button" to="/qarsafariNavigator">
             &#8592; უკან
           </Link>
@@ -77,7 +94,7 @@ const EqselisWakitxva = () => {
             title="ამოირჩიეთ ექსელის ფაილი."
           />
         </div>
-        <div className="row-excel">
+        <div className="row-excel1">
           <div>
             <input
               value={calcVarjisFarti}
@@ -91,7 +108,7 @@ const EqselisWakitxva = () => {
             </label>
           </div>
         </div>
-        <div className="row-excel">
+        <div className="row-excel1">
           <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
           <input
             placeholder="შეიყვანეთ რიცხვი"
@@ -101,7 +118,7 @@ const EqselisWakitxva = () => {
             title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."
           />
         </div>
-        <div className="row-excel">
+        <div className="row-excel1">
           <label>
             შეიყანეთ მისამართი სადაც უნდა შეიქმნას
             <br /> ექსელის ახალი ფაილი
@@ -114,7 +131,7 @@ const EqselisWakitxva = () => {
             title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
           />
         </div>
-        <div className="row-excel">
+        <div className="row-excel1">
           <label>ამოირჩიეთ access ფაილი</label>
           <input
             type="text"
@@ -131,7 +148,7 @@ const EqselisWakitxva = () => {
             title="ამოირჩიეთ access ფაილი."
           />
         </div>
-        <div className="row-excel">
+        <div className="row-excel1">
           <label>ამოირჩიეთ მუნიციპალიტეტი</label>
           <select
             title="აირჩიეთ მუნიციპალიტეტი"
@@ -149,8 +166,19 @@ const EqselisWakitxva = () => {
             ))}
           </select>
         </div>
+        {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">
-          <button onClick={handleSubmit}> გაშვება </button>
+          <button
+            onClick={handleSubmit}
+            disabled={IsDisabledGashvebaButton}
+            style={{
+              backgroundColor:
+                IsDisabledGashvebaButton === true ? "gray" : "#4caf50",
+            }}
+          >
+            {" "}
+            გაშვება{" "}
+          </button>
           <Link className="gadavifiqre-btn" to="/qarsafariNavigator">
             გადავიფიქრე
           </Link>

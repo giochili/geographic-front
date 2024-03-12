@@ -306,7 +306,7 @@ const SaxeobaTable = () => {
       DictionaryDTO: state.data.map((item) => ({
         ID: item.id,
         Name: item.name,
-        Code: item.code,
+        Code: 1,
       })),
     };
     axios
@@ -325,7 +325,8 @@ const SaxeobaTable = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        justifyContent: "start",
+        objectFit: "fill",
       }}
     >
       <h1>სახეობების ცხრილი</h1>
@@ -337,15 +338,6 @@ const SaxeobaTable = () => {
           overflowX: "hidden",
         }}
       >
-        <div
-          style={{
-            height: 120,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        ></div>
         <div style={{ overflow: "auto", display: "flex" }}>
           <div
             style={{

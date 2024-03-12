@@ -6,6 +6,8 @@ import QarsafaiPage from "./components/Qarsafari/qarsafariNavigator";
 import EqselisWakitxva from "./components/Qarsafari/eqselisWakitxva";
 import VarjisFartebi from "./components/AdminPanel/varjisFarti";
 import ExcelExport from "./components/AdminPanel/excelExport";
+import QarsafariGroup from "./components/QarsafariGroup/qarsafariGroup";
+
 function App() {
   return (
     <Routes>
@@ -15,6 +17,7 @@ function App() {
       <Route path="/eqselisWakitxva" element={<EqselisWakitxva />} />
       <Route path="/SideBarPanel/Varjisfarti" element={<VarjisFartebi />} />
       <Route path="/SideBarPanel/ExcelExport" element={<ExcelExport />} />
+      <Route path="/SideBarPanel/QarsafariGroup" element={<QarsafariGroup />} />
     </Routes>
   );
 }
