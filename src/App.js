@@ -7,6 +7,8 @@ import EqselisWakitxva from "./components/Qarsafari/eqselisWakitxva";
 import VarjisFartebi from "./components/AdminPanel/varjisFarti";
 import ExcelExport from "./components/AdminPanel/excelExport";
 import QarsafariGroup from "./components/QarsafariGroup/qarsafariGroup";
+import PhotoDateCheck from "./components/Qarsafari/photoDateCheck";
+import ChromeBotPage from "./ChromBot/ChromeBotpage";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Route path="/SideBarPanel/Varjisfarti" element={<VarjisFartebi />} />
       <Route path="/SideBarPanel/ExcelExport" element={<ExcelExport />} />
       <Route path="/SideBarPanel/QarsafariGroup" element={<QarsafariGroup />} />
+      <Route path="/photoDateCheck" element={<PhotoDateCheck />} />
+      <Route path="/ChromBot/ChromeBotPage" element={<ChromeBotPage />} />
     </Routes>
   );
 }

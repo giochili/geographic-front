@@ -23,17 +23,19 @@ const EqselisWakitxva = () => {
     }
   };
   const [ExcelPath, setExcelPath] = useState(
-    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
+    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
+    "D:\\Documents\\Desktop\\I_etapi\\Gardabani_I_Etapi.xls"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
     "D:\\Documents\\Desktop\\resultoftest"
   );
   const [accessFilePath, setAccessFilePath] = useState(
-    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
+    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
+    "D:\\Documents\\Desktop\\I_etapi\\Windbreak_Gardabani.mdb"
   );
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Windbreak");
+  const [accessShitName, setAccessShitName] = useState("Windbreak_Gardabani");
   const [projectNameID, setProjectNameID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
@@ -67,14 +69,15 @@ const EqselisWakitxva = () => {
         AccessShitName: accessShitName,
       };
       const response = await axios.post(apiUrl, payload);
-      if (response.data.Success) {
-        alert("წარმატებით დასრულდა");
-      } else {
-        alert("არ წარმატებით დასრულდა" + response.data.Message);
-      }
+      alert("წარმატებით დასრულდა: " + response.data.message);
       setIsDisabledGashvebaButton(false);
       setLoading(false);
     } catch (error) {
+      if (error.response.data.success) {
+        alert("წარმატებით დასრულდა");
+      } else {
+        alert(error.response.data.message);
+      }
       setIsDisabledGashvebaButton(false);
       setLoading(false);
     }

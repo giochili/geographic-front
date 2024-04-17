@@ -7,7 +7,8 @@ import axios from "axios";
 
 const Gadanomvra = ({ cardDataArray }) => {
   const [folderPath, setFolderPath] = useState(
-    "D:\\Documents\\Desktop\\Photoes"
+    // "D:\\Documents\\Desktop\\Photoes"
+    "D:\\Documents\\Desktop\\I_etapi\\Photoes"
   );
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();

@@ -22,6 +22,15 @@ const QarsafaiPage = ({ cardDataArray }) => {
           </div>
         </Link>
       </div>
+      <div className="second-level-container">
+        <Link className="link" to="/photoDateCheck">
+          <div className="photo-date-check-background">
+            <div className="text" style={{ color: "black" }}>
+              ფოტო/დეითის შემოწმება
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };

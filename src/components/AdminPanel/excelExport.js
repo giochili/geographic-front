@@ -6,10 +6,12 @@ import "../../Styles/AdminPanel/Loader.css";
 
 const ExcelExport = () => {
   const [accessActualPath, setAccessActualPath] = useState(
-    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
+    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
+    "D:\\Documents\\Desktop\\I_etapi\\Windbreak - Gardabani.mdb"
   );
   const [excelActualPath, setExcelActualPath] = useState(
-    "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
+    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
+    "D:\\Documents\\Desktop\\I_etapi\\Gardabani_I_Etapi.xls"
   );
   const [ExcelOptions, setExcelOptions] = useState([]);
   const [AccessOptions, setAccessOptions] = useState([]);
@@ -17,7 +19,7 @@ const ExcelExport = () => {
   const [accesskey, setAccesskey] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [accessSheetName, setAccessSheetName] = useState("");
+  const [accessSheetName, setAccessSheetName] = useState("Windbreak_Gardabani");
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -132,6 +134,7 @@ const ExcelExport = () => {
               style={{ marginRight: "20px" }}
               type="text"
               title="შეიყვანეთ შიტის სახელი"
+              // value={"Windbreak_Gardabani"}
               onChange={(e) => setAccessSheetName(e.target.value)}
             />
           </div>

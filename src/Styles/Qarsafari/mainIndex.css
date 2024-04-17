@@ -13,6 +13,10 @@
   height: 100vh;
   background-color: lightsteelblue; /* Set your desired background color */
 }
+.main-index-container {
+  display: flex;
+  flex-direction: row !important;
+}
 .back-button {
   position: absolute;
   top: 0;

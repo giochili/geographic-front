@@ -62,7 +62,7 @@ export default function Table({
         enableColumnOrdering,
         sortTypes,
         initialState: {
-          hiddenColumns: ["areaNameId", "saxeobaId", "id", "code"],
+          hiddenColumns: ["areaNameId", "saxeobaId", "id", "code", "Sort"],
         },
       },
       useFlexLayout,

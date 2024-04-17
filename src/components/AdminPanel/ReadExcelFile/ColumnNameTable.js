@@ -224,8 +224,31 @@ const ColumnNameTable = (ExcelOptions) => {
         const apiUrl = "https://localhost:7055/GetSQLColumnNamesList";
         const response = await axios.get(apiUrl);
 
-        //დისპაჩი აკეთებს data ში ენდფოინთის შედეგის ჩაწერას
-        dispatch({ type: "UPDATE_DATA", payload: response.data.data });
+        if (ExcelOptions.ExcelOptions.length > 0) {
+          await response.data.data.forEach((person, index) => {
+            let copyFromPerson = ExcelOptions.ExcelOptions.find(
+              (ele) => ele.excelName === person.excelName
+            );
+            if (copyFromPerson) person.colN = copyFromPerson.colN;
+          });
+
+          // // Assuming response.data.data is an array of objects with a common identifier
+          // const updatedData = response.data.data.map((item) => {
+          //   const matchingExcelOption = ExcelOptions.find(
+          //     (option) => option.excelName === item.excelName
+          //   );
+          //   if (matchingExcelOption) {
+          //     return { ...item, coln: matchingExcelOption.coln };
+          //   }
+          //   return item;
+          // });
+
+          //დისპაჩი აკეთებს data ში ენდფოინთის შედეგის ჩაწერას
+          dispatch({ type: "UPDATE_DATA", payload: response.data.data });
+        } else {
+          //დისპაჩი აკეთებს data ში ენდფოინთის შედეგის ჩაწერას
+          dispatch({ type: "UPDATE_DATA", payload: response.data.data });
+        }
         //makeData(5, response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -256,6 +279,19 @@ const ColumnNameTable = (ExcelOptions) => {
         const handleChange = (event) => {
           setSelectedValue(event.target.value);
           row.original.excelName = event.target.value;
+          var ColnOnChange = "";
+
+          if (ExcelOptions.ExcelOptions.length > 0) {
+            ColnOnChange = ExcelOptions.ExcelOptions.find(
+              (ele) => ele.excelName === event.target.value
+            ).colN;
+          } else {
+            ColnOnChange = options.find(
+              (ele) => ele.excelName === event.target.value
+            ).colN;
+          }
+
+          row.original.colN = ColnOnChange;
         };
 
         const [selectedValue, setSelectedValue] = useState(
@@ -272,7 +308,6 @@ const ColumnNameTable = (ExcelOptions) => {
               const filteredData = response.data.data.filter((item) => {
                 return item.excelName !== null;
               });
-
               setOptions(filteredData);
             } catch (error) {
               console.error("Error fetching data:", error);
@@ -296,28 +331,28 @@ const ColumnNameTable = (ExcelOptions) => {
 
             {ExcelOptions.ExcelOptions.length > 0
               ? ExcelOptions.ExcelOptions.map((option) => (
-                  <option key={option.excelName} value={option.excelName}>
+                  <option
+                    key={option.excelName}
+                    title={option.colN}
+                    value={option.excelName}
+                  >
                     {option.excelName}
                   </option>
                 ))
               : options.map((option) => (
-                  <option key={option.id} value={option.excelName}>
+                  <option
+                    key={option.id}
+                    title={option.colN}
+                    value={option.excelName}
+                  >
                     {option.excelName}
                   </option>
                 ))}
           </select>
-
-          // <select value={selectedValue} onChange={handleChange}>
-          //   <option value={0}></option>
-          //   {options.map((option) => (
-          //     <option key={option.id} value={option.excelName}>
-          //       {option.excelName}
-          //     </option>
-          //   ))}
-          // </select>
         );
       },
     },
+
     {
       id: "AccessName",
       label: "AccessName",
@@ -384,9 +419,9 @@ const ColumnNameTable = (ExcelOptions) => {
     },
     {
       id: "IsAccessToExcel",
-      label: "",
+      label: "IsAccessToExcel",
       accessor: "IsAccessToExcel",
-      maxWidth: 40,
+      maxWidth: 140,
       dataType: "checkbox",
       options: [],
       Cell: ({ row }) => {
@@ -494,6 +529,67 @@ const ColumnNameTable = (ExcelOptions) => {
             </div>
           ); // Display the existing value for existing rows
         }
+      },
+    },
+    {
+      id: "GroupMethod",
+      label: "GroupMethod",
+      accessor: "GroupMethod",
+      minWidth: 100,
+      dataType: "text",
+      options: [],
+
+      Cell: ({ row }) => {
+        const [groupOptions, setGroupOptions] = useState([]);
+        const handleChange = (event) => {
+          setSelectedValue(event.target.value);
+          row.original.groupMethod = event.target.value;
+        };
+
+        const [selectedValue, setSelectedValue] = useState(
+          row.original.groupMethod
+        );
+
+        const defaultSuggestions = ["SUM", "SUBSTRING", "MAX"];
+        const optionsToShow = defaultSuggestions.slice(0, 3);
+        useEffect(() => {
+          setSelectedValue(row.original.groupMethod);
+        }, [row.original.groupMethod]);
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const apiUrl = "https://localhost:7055/GetSQLColumnNamesList";
+              const response = await axios.get(apiUrl);
+              const filteredData = response.data.data.filter((item) => {
+                return item.groupMethod !== null;
+              });
+              setGroupOptions(filteredData);
+            } catch (error) {
+              console.error("Error fetching data:", error);
+            }
+          };
+          fetchData();
+        }, []);
+        return (
+          <select
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              margin: "5px",
+            }}
+            value={selectedValue}
+            onChange={handleChange}
+          >
+            <option value={0}></option>
+            {optionsToShow.map((groupMethod) => (
+              <option key={groupMethod} value={groupMethod}>
+                {groupMethod}
+              </option>
+            ))}
+          </select>
+        );
       },
     },
     {
@@ -641,7 +737,9 @@ const ColumnNameTable = (ExcelOptions) => {
         AccessName: item.accessName,
         SortValue: item.shortValue,
         DataType: item.dataType,
+        GroupMethod: item.groupMethod,
         IsAccessToExcel: item.isAccessToExcel,
+        ColN: item.colN,
       })),
     };
 
