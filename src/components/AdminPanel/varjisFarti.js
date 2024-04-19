@@ -265,7 +265,7 @@ function VarjisFarti() {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const apiUrl = "https://localhost:7055/getSaxeobaList";
+              const apiUrl = "https://localhost:7027/getSaxeobaList";
               const response = await axios.get(apiUrl);
               setOptions(response.data.data);
             } catch (error) {
@@ -339,7 +339,7 @@ function VarjisFarti() {
           );
 
           if (confirmed) {
-            const apiUrl = "https://localhost:7055/DeleteVarjisfarti";
+            const apiUrl = "https://localhost:7027/DeleteVarjisfarti";
             const payLoad = {
               id: row.original.id,
               name: row.original.name,
@@ -403,7 +403,7 @@ function VarjisFarti() {
 
     //state.columns = columns;
     try {
-      const apiUrl = "https://localhost:7055/GetVarjisFartebiList";
+      const apiUrl = "https://localhost:7027/GetVarjisFartebiList";
       const response = await axios.get(apiUrl, {
         params: {
           AreaNameID: projectID,
@@ -420,7 +420,7 @@ function VarjisFarti() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7055/GetProjectNamesList";
+        const apiUrl = "https://localhost:7027/GetProjectNamesList";
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
       } catch (error) {
@@ -447,7 +447,7 @@ function VarjisFarti() {
       })),
     };
     axios
-      .post("https://localhost:7055/SaveVarjisFarti", payLoad.varjisFartiDTO)
+      .post("https://localhost:7027/SaveVarjisFarti", payLoad.varjisFartiDTO)
       .then((response) => {
         // Assuming the response.data is the updated list
         setData(response.data);

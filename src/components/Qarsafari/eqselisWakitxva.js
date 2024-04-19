@@ -6,46 +6,63 @@ import "../../Styles/Qarsafari/eqselisWakitxva.css";
 
 const EqselisWakitxva = () => {
   const [UnicID, setUnicID] = useState(0);
-  const excelFilePath = async (e) => {
-    try {
-      const file = e.target.files[0];
-      if (!file) {
-        // User canceled file selection
-        return;
-      }
+  // const excelFilePath = async (e) => {
+  //   try {
+  //     const file = e.target.files[0];
+  //     if (!file) {
+  //       // User canceled file selection
+  //       return;
+  //     }
 
-      const data = await file.arrayBuffer();
-      const workbook = XLSX.read(data, { type: "array" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
-    } catch (error) {
-      alert("Error reading Excel file:", error);
-    }
-  };
+  //     const data = await file.arrayBuffer();
+  //     const workbook = XLSX.read(data, { type: "array" });
+  //     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  //     const jsonData = XLSX.utils.sheet_to_json(worksheet);
+  //   } catch (error) {
+  //     alert("Error reading Excel file:", error);
+  //   }
+  // };
   const [ExcelPath, setExcelPath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
-    "D:\\Documents\\Desktop\\I_etapi\\Gardabani_I_Etapi.xls"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Gardabani_II_Etapi.xlsx"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
-    "D:\\Documents\\Desktop\\resultoftest"
+    // "D:\\Documents\\Desktop\\resultoftest"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\result-2-etapi"
   );
   const [accessFilePath, setAccessFilePath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
-    "D:\\Documents\\Desktop\\I_etapi\\Windbreak_Gardabani.mdb"
+    // "D:\\Documents\\Desktop\\I_etapi\\Windbreak_Gardabani.mdb"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Windbreak_gardabani_II.mdb"
   );
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Windbreak_Gardabani");
+  const [etapiOptions,setEtapiOptions] = useState([])
+  const [accessShitName, setAccessShitName] = useState("Windbreak");
   const [projectNameID, setProjectNameID] = useState(0);
+  const [etapiID,setEtapiID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7055/GetProjectNamesList";
+        const apiUrl = "https://localhost:7027/GetProjectNamesList";
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = "https://localhost:7027/GetEtapiIDList";
+        const response = await axios.get(apiUrl);
+        setEtapiOptions(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -58,7 +75,7 @@ const EqselisWakitxva = () => {
     try {
       setLoading(true);
       setIsDisabledGashvebaButton(true);
-      const apiUrl = "https://localhost:7055/ExcelCalculations";
+      const apiUrl = "https://localhost:7027/ExcelCalculations";
       const payload = {
         UnicIDStartNumber: UnicID,
         ExcelPath: ExcelPath,
@@ -67,6 +84,7 @@ const EqselisWakitxva = () => {
         ProjectNameID: projectNameID,
         CalcVarjisFartiCheckbox: calcVarjisFarti,
         AccessShitName: accessShitName,
+        EtapiID:etapiID
       };
       const response = await axios.post(apiUrl, payload);
       alert("წარმატებით დასრულდა: " + response.data.message);
@@ -93,7 +111,8 @@ const EqselisWakitxva = () => {
           <input
             type="file"
             accept=".xlsx"
-            onChange={(e) => excelFilePath(e)}
+            // value = {ExcelPath}
+            // onChange={(e) => setExcelPath(e.target.value)}
             title="ამოირჩიეთ ექსელის ფაილი."
           />
         </div>
@@ -127,7 +146,7 @@ const EqselisWakitxva = () => {
             <br /> ექსელის ახალი ფაილი
           </label>
           <input
-            // value={newExcelDestination}
+            value={newExcelDestination}
             type="text"
             placeholder="შეავსეთ მისამართი"
             // onChange={(e) => setNewExcelDestination(e.target.value)}
@@ -144,7 +163,7 @@ const EqselisWakitxva = () => {
           />
           <input
             // value={accessFilePath}
-            // onChange={(e) => setAccessFilePath(e.target.value)}
+            //onChange={(e) => setAccessFilePath(e.target.value)}
             type="file"
             accept=".mdb"
             placeholder="insert path"
@@ -168,6 +187,20 @@ const EqselisWakitxva = () => {
               </option>
             ))}
           </select>
+          <select
+            onChange={(e) => setEtapiID(e.target.value)}
+          >
+            <option value={0}></option>
+            {etapiOptions.map((option) => (
+              <option
+                key={option.id}
+                value={option.id}
+              >
+                {option.name}
+              </option>
+            ))}
+          </select>
+
         </div>
         {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">

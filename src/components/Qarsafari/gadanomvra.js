@@ -8,12 +8,13 @@ import axios from "axios";
 const Gadanomvra = ({ cardDataArray }) => {
   const [folderPath, setFolderPath] = useState(
     // "D:\\Documents\\Desktop\\Photoes"
-    "D:\\Documents\\Desktop\\I_etapi\\Photoes"
+    // "D:\\Documents\\Desktop\\I_etapi\\Photoes"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Photoes"
   );
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
-  const apiUrl = "https://localhost:7055/RenamePhotosInFolder";
+  const apiUrl = "https://localhost:7027/RenamePhotosInFolder";
 
   const handleSubmit = async () => {
     const payload = {

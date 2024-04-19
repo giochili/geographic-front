@@ -7,11 +7,13 @@ import "../../Styles/AdminPanel/Loader.css";
 const ExcelExport = () => {
   const [accessActualPath, setAccessActualPath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
-    "D:\\Documents\\Desktop\\I_etapi\\Windbreak - Gardabani.mdb"
+    // "D:\\Documents\\Desktop\\I_etapi\\Windbreak - Gardabani.mdb"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Windbreak_gardabani_II.mdb"
   );
   const [excelActualPath, setExcelActualPath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
-    "D:\\Documents\\Desktop\\I_etapi\\Gardabani_I_Etapi.xls"
+    // "D:\\Documents\\Desktop\\I_etapi\\Gardabani_I_Etapi.xls"
+    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Gardabani_II_Etapi.xlsx"
   );
   const [ExcelOptions, setExcelOptions] = useState([]);
   const [AccessOptions, setAccessOptions] = useState([]);
@@ -19,12 +21,12 @@ const ExcelExport = () => {
   const [accesskey, setAccesskey] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [accessSheetName, setAccessSheetName] = useState("Windbreak_Gardabani");
+  const [accessSheetName, setAccessSheetName] = useState("Windbreak");
 
   const handleSubmit = async () => {
     setLoading(true);
 
-    const apiUrl = "https://localhost:7055/ColumnNameTransfer";
+    const apiUrl = "https://localhost:7027/ColumnNameTransfer";
     const payload = {
       ExcelPath: excelActualPath,
     };
@@ -53,7 +55,7 @@ const ExcelExport = () => {
 
   const handleAccessSubmit = async () => {
     setLoading(true);
-    const apiUrl = "https://localhost:7055/ColumnNameTransferFromAccess";
+    const apiUrl = "https://localhost:7027/ColumnNameTransferFromAccess";
     const payload = {
       AccessPath: accessActualPath,
       AccessSheetName: accessSheetName,

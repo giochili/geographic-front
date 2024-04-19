@@ -15,7 +15,7 @@ const PhotoDateCheck = () => {
   const handleSubmit = async () => {
     setLoading(true);
 
-    const apiUrl = "https://localhost:7055/GetCheckPhotoDate";
+    const apiUrl = "https://localhost:7027/GetCheckPhotoDate";
     const payload = { folderPath: folderPath, resultPath: resultPath };
 
     try {

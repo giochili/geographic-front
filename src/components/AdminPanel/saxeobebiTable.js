@@ -269,7 +269,7 @@ const SaxeobaTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7055/getSaxeobaList";
+        const apiUrl = "https://localhost:7027/getSaxeobaList";
         const response = await axios.get(apiUrl);
         //დისპაჩი აკეთებს data ში ენდფოინთის შედეგის ჩაწერას
         dispatch({ type: "UPDATE_DATA", payload: response.data.data });
@@ -285,7 +285,7 @@ const SaxeobaTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7055/GetProjectNamesList";
+        const apiUrl = "https://localhost:7027/GetProjectNamesList";
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
       } catch (error) {
@@ -310,7 +310,7 @@ const SaxeobaTable = () => {
       })),
     };
     axios
-      .post("https://localhost:7055/SaveSaxeobebi", payLoad.DictionaryDTO)
+      .post("https://localhost:7027/SaveSaxeobebi", payLoad.DictionaryDTO)
       .then((response) => {
         // Assuming the response.data is the updated list
         setData(response.data);

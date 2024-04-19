@@ -4,7 +4,7 @@ import axios from "axios";
 
 const ChromeBotPage = () => {
   const [excelPath, setExcelPath] = useState("");
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState("D:\\Projects\\2024\\CHromeBotT");
   const [loading, setLoading] = useState(false);
 
 
@@ -38,7 +38,7 @@ const ChromeBotPage = () => {
 
     setLoading(true);
 
-    const apiUrl = "https://localhost:7055/BotChromeArguments";
+    const apiUrl = "https://localhost:7027/BotChromeArguments";
     const payload = { Excelpath: excelPath, Destination: destination };
 
     try {
