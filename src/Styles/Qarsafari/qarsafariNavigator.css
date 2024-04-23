@@ -6,6 +6,7 @@
 
 .Main {
   display: flex;
+  flex-wrap: wrap;
   height: 100vh;
   align-items: center;
   justify-content: center;
@@ -50,5 +51,29 @@
   transition: transform 0.3s ease;
 }
 .link:hover .photo-date-check-background {
+  transform: scale(1.1); /* Set your desired zoom factor */
+}
+.photo-split-background{
+  background-color: cornflowerblue;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/Qarsafari/split-photo.png")
+    center/cover no-repeat; /* Replace with the actual path to your image */
+  transition: transform 0.3s ease;
+}
+.link:hover .photo-split-background {
+  transform: scale(1.1); /* Set your desired zoom factor */
+}
+.admin-panel-background{
+  background-color: cornflowerblue;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/Qarsafari/admin-panel.png")
+    center/cover no-repeat; /* Replace with the actual path to your image */
+  transition: transform 0.3s ease;
+}
+.link:hover .admin-panel-background {
   transform: scale(1.1); /* Set your desired zoom factor */
 }

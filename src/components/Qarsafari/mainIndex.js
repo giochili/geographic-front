@@ -10,16 +10,21 @@ const MainPage = ({ cardDataArray }) => {
           <div className="text">ქარსაფარი</div>
         </div>
       </Link>
-      <Link className="link" to="/SideBarPanel/Varjisfarti">
+      {/* <Link className="link" to="/SideBarPanel/Varjisfarti">
         <div className="cart-background">
           <div className="text">Sidebar</div>
         </div>
-      </Link>
+      </Link> */}
       <Link className="link" to="/ChromBot/ChromeBotPage">
-        <div className="cart-background">
-          <div className="text">ქრომ ბოტი</div>
+        <div className="cart-background-bott">
+          <div style={{ color: "yellow" }} className="text">ქრომ ბოტი</div>
         </div>
       </Link>
+      {/* <Link className="link" to="/PhotoSplit/PhotoSplit">
+        <div className="cart-background">
+          <div className="text">ფოტოების დახარისხება (სახელმწიფო\კერძო)</div>
+        </div>
+      </Link> */}
     </div>
   );
 };

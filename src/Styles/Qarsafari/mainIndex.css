@@ -45,6 +45,14 @@
     center/cover no-repeat; /* Replace with the actual path to your image */
   transition: transform 0.3s ease;
 }
+.cart-background-bott{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/Qarsafari/chrome-bott.jpg")
+    center/cover no-repeat; /* Replace with the actual path to your image */
+  transition: transform 0.3s ease;
+}
 
 .text {
   position: absolute;
@@ -58,6 +66,9 @@
 }
 
 .link:hover .cart-background {
+  transform: scale(1.1); /* Set your desired zoom factor */
+}
+.link:hover .cart-background-bott {
   transform: scale(1.1); /* Set your desired zoom factor */
 }
 

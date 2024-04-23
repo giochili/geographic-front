@@ -31,6 +31,24 @@ const QarsafaiPage = ({ cardDataArray }) => {
           </div>
         </Link>
       </div>
+      <div className="second-level-container">
+        <Link className="link" to="/PhotoSplit/PhotoSplit">
+          <div className="photo-split-background">
+            <div className="text" style={{ color: "black" }}>
+            ფოტოების დახარისხება (სახელმწიფო\კერძო)
+            </div>
+          </div>
+        </Link>
+      </div>
+      <div className="second-level-container">
+        <Link className="link" to="/SideBarPanel/Varjisfarti">
+          <div className="admin-panel-background">
+            <div className="text" style={{ color: "black" }}>
+            ადმინკა
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };

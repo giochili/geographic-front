@@ -2,27 +2,15 @@ import React, { useRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const ChromeBotPage = () => {
-  const [excelPath, setExcelPath] = useState("");
+const PhotoSplit = () => {
+  const [photosBefore, setPhotosBefore] = useState("");
   const [destination, setDestination] = useState("D:\\Projects\\2024\\CHromeBotT");
   const [loading, setLoading] = useState(false);
 
 
-  const handleExcelFileChange = (event) => {
-    const selectedFolder = event.target.value;
-    setExcelPath(selectedFolder);
-    // const file = event.target.files[0];
-    // if (file) {
-    //   // Check if the selected file is an Excel file
-    //   if (
-    //     file.type ===
-    //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    //   ) {
-    //     setExcelPath(file.name);
-    //   } else {
-    //     alert("Please select an Excel file.");
-    //   }
-    // }
+  const handlePhotoLocation = (event) => {
+    const photosBefore = event.target.value;
+    setPhotosBefore(photosBefore);
   };
 
   const handleDestinationChange = (event) => {
@@ -31,7 +19,7 @@ const ChromeBotPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!excelPath || !destination) {
+    if (!photosBefore || !destination) {
       alert("Please fill in all fields.");
       return;
     }
@@ -39,7 +27,7 @@ const ChromeBotPage = () => {
     setLoading(true);
 
     const apiUrl = "https://localhost:7027/BotChromeArguments";
-    const payload = { Excelpath: excelPath, Destination: destination };
+    const payload = { gadanomriliPhotoFolderPath: photosBefore, destinationFolderPath: destination };
 
     try {
       const response = await axios.post(apiUrl, payload);
@@ -56,14 +44,14 @@ const ChromeBotPage = () => {
 
   return (
     <div className="main-container">
-      <Link className="back-button" to="/">
+      <Link className="back-button" to="/qarsafariNavigator">
         &#8592; Back
       </Link>
       <div className="content-container">
         <div className="item-row">
-          <label>ამოირჩიეთ ექსელის ფაილი (copy/paste)</label>
+          <label>მიუთითეთ სად არის ფოტოების ფოლდერი (copy/paste)</label>
           <div style={{ display: "flex", gap: "20px" }}>
-          <input type="text" onChange={handleExcelFileChange}></input>
+          <input type="text" onChange={handlePhotoLocation}></input>
             {/* <input
               type="file"
               accept=".xlsx"
@@ -72,18 +60,14 @@ const ChromeBotPage = () => {
           </div>
         </div>
         <div className="item-row">
-          <label>შეიყვანეთ ფოლდერი ხელით (copy/pase)</label>
+          <label>შეიყვანეთ ფოლდერი ხელით სად ჩაიწეროს შედეგი (copy/pase)</label>
           <div style={{ display: "flex", gap: "20px" }}>
             <input type="text" onChange={handleDestinationChange}></input>
-            {/* <select value={destination} onChange={handleDestinationChange}>
-              <option value="">Select a folder</option>
-              <option value="/path/to/desktop">Desktop</option>
-              <option value="/path/to/downloads">Downloads</option>
-            </select> */}
+            
           </div>
         </div>
         <div style={{ display: "flex", gap: "20px" }}>
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit}>გაშვება</button>
           {loading && <div className="spinner"></div>}
         </div>
       </div>
@@ -91,4 +75,4 @@ const ChromeBotPage = () => {
   );
 };
 
-export default ChromeBotPage;
+export default PhotoSplit;
