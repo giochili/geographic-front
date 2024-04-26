@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const ChromeBotPage = () => {
-  const [excelPath, setExcelPath] = useState("");
-  const [destination, setDestination] = useState("D:\\Projects\\2024\\CHromeBotT");
+  const [excelPath, setExcelPath] = useState("D:\\My Documents\\Desktop\\test.xlsx");
+  const [destination, setDestination] = useState("D:\\My Documents\\Desktop");
   const [loading, setLoading] = useState(false);
 
 
