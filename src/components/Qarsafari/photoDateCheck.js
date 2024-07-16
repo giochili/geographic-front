@@ -7,9 +7,25 @@ import React from "react";
 const PhotoDateCheck = () => {
   const [folderPath, setolderPath] = useState(
     // "D:\\Documents\\Desktop\\publistcsa"
-    "D:\\Documents\\Desktop\\I_etapi\\Photoes"
+    // "D:\\Documents\\Desktop\\I_etapi\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\walka_photo_Resize"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\bolnisi_photo_Resize"
+    // "D:\\Documents\\Desktop\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Photo"
+    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\bolnisi_photo_Resize"
   );
-  const [resultPath, setResultPath] = useState("D:\\Documents\\Desktop");
+  const [resultPath, setResultPath] = useState(
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\results"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\results"
+    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\result"
+    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\result"
+  );
 
   const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {

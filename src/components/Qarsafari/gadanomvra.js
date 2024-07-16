@@ -9,7 +9,7 @@ const Gadanomvra = ({ cardDataArray }) => {
   const [folderPath, setFolderPath] = useState(
     // "D:\\Documents\\Desktop\\Photoes"
     // "D:\\Documents\\Desktop\\I_etapi\\Photoes"
-    "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\2-ე-ეტაპი\\Photoes"
+    "D:\\MyWork\\2023\\Telavi_Qarsafari\\GARDABANI\\Photoes"
   );
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();

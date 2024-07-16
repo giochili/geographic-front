@@ -4,9 +4,10 @@ import axios from "axios";
 
 const PhotoSplit = () => {
   const [photosBefore, setPhotosBefore] = useState("");
-  const [destination, setDestination] = useState("D:\\Projects\\2024\\CHromeBotT");
+  const [destination, setDestination] = useState(
+    "D:\\Projects\\2024\\CHromeBotT"
+  );
   const [loading, setLoading] = useState(false);
-
 
   const handlePhotoLocation = (event) => {
     const photosBefore = event.target.value;
@@ -26,8 +27,11 @@ const PhotoSplit = () => {
 
     setLoading(true);
 
-    const apiUrl = "https://localhost:7027/BotChromeArguments";
-    const payload = { gadanomriliPhotoFolderPath: photosBefore, destinationFolderPath: destination };
+    const apiUrl = "https://localhost:7027/PostPhotoSplitPaths";
+    const payload = {
+      gadanomriliPhotoFolderPath: photosBefore,
+      destinationFolderPath: destination,
+    };
 
     try {
       const response = await axios.post(apiUrl, payload);
@@ -51,7 +55,7 @@ const PhotoSplit = () => {
         <div className="item-row">
           <label>მიუთითეთ სად არის ფოტოების ფოლდერი (copy/paste)</label>
           <div style={{ display: "flex", gap: "20px" }}>
-          <input type="text" onChange={handlePhotoLocation}></input>
+            <input type="text" onChange={handlePhotoLocation}></input>
             {/* <input
               type="file"
               accept=".xlsx"
@@ -63,7 +67,6 @@ const PhotoSplit = () => {
           <label>შეიყვანეთ ფოლდერი ხელით სად ჩაიწეროს შედეგი (copy/pase)</label>
           <div style={{ display: "flex", gap: "20px" }}>
             <input type="text" onChange={handleDestinationChange}></input>
-            
           </div>
         </div>
         <div style={{ display: "flex", gap: "20px" }}>
