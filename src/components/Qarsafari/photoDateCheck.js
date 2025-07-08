@@ -15,7 +15,15 @@ const PhotoDateCheck = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\Photoes"
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Photoes"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Photo"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\bolnisi_photo_Resize"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\Photoes"
+    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო\\V2\\photo"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\dmanisi_photo_Resize"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\foto"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V2\\Resized"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\photo"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V5-chamateba\\"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3\\Photo"
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Photoes"
   );
   const [resultPath, setResultPath] = useState(
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\Photoes"
@@ -24,7 +32,17 @@ const PhotoDateCheck = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\results"
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\results"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\result"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\V3\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V2\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V5-chamateba"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-final-Etap\\Gori-3-etapi-fotoebi-10"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-2-nawili"
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Photoes\\result"
   );
 
   const [loading, setLoading] = useState(false);

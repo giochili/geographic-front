@@ -14,9 +14,16 @@ const EqselisWakitxva = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\bolnisi_photo_Resize"
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Photoes"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Photo"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\bolnisi_photo_Resize"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\Photoes"
     // "D:\\Projects\\2023\\Qarsafrebi\\test\\Photo"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\State"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\dmanisi_photo_Resize"
+    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\Photoes_State"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V4\\Resized"
+    //aloeks D:\Projects\2025\QarsaffariDatvlebi\ALEKS\Gori\III\Photoes_New
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Photoes"
   );
+  const [gadanomriliaUNIQID, setGadanomriliaUNIQID] = useState(false);
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [gadanomriliaFotoebi, setGadanomriliaFotoebi] = useState(false);
 
@@ -44,8 +51,22 @@ const EqselisWakitxva = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\ბოლნისი_1.xlsx"
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Gardabani_II_Etapi.xlsx"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\tetriwyaro.xlsx"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\ბოლნისი.xlsx"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\დუშეთი.xlsx"
     // "D:\\Projects\\2023\\Qarsafrebi\\test\\tetriwyaro.xlsx"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\ბოლნისი.xlsx"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\dmanisi.xlsx"
+    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\წალკა_v2.xlsx"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Kaspi_Windbreak_2025"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V4\\მცხეთა_ორიგინალი.xls"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\გორი_ორიგინალი.xls"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3\\გორი_ორიგინალი_II.xls"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\გორი_ორიგინალი_1_ეტაპი.xls"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-chortioznaet-V1\\გორი_ორიგინალი_3_ეტაპი.xls"
+    //"D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori_Etapi_2_final\\გორი_ორიგინალი_2_ეტაპი.xls"
+    //aleks
+
+    //"D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Gori\\III\\გორი_ორიგინალი_3_ეტაპი.xls"
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\ხაშური.xls"
   );
   const [newExcelDestination, setNewExcelDestination] = useState(
     // "D:\\Documents\\Desktop\\resultoftest"
@@ -54,7 +75,15 @@ const EqselisWakitxva = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\results"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\result"
     // "D:\\Projects\\2023\\Qarsafrebi\\test\\result"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\result"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V6\\result"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\result"
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\result"
+
   );
   const [accessFilePath, setAccessFilePath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
@@ -64,12 +93,20 @@ const EqselisWakitxva = () => {
     // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Widreak_Gardabani.mdb"
     // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Windbreak_Tetritskaro.mdb"
     // "D:\\Projects\\2023\\Qarsafrebi\\test\\Windbreak_Tetritskaro.mdb"
-    "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_old\\20240617_Windbreak_Bolnisi_State.mdb"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\20240521_Widnbreak_Dusheti_Damateba.mdb"
+    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\Windbreak_Bolnisi.mdb"
+    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\202409_Widbreak_Dmanisi_State_v2.mdb"
+    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\202410_Widbreak_Tsalka_v2.mdb"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\20240826_Kaspi_Windbreak_State_Damateba.mdb"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\202505_Windbreak_Gori_State_etapi1.mdb"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3\\202506_Windbreak_Gori_State_etapi2.mdb"
+    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\20250616_Windbreak_Gori_State_1_etapi_shemowmeba.mdb"
+    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Aleks_202506_Windbreak_Khashuri_State.mdb"
   );
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
   const [etapiOptions, setEtapiOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Windbreak_Bolnisi");
+  const [accessShitName, setAccessShitName] = useState("Kashuri_Windbreak_State");
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
@@ -101,7 +138,6 @@ const EqselisWakitxva = () => {
 
     fetchData();
   }, []);
-
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -118,8 +154,9 @@ const EqselisWakitxva = () => {
         EtapiID: etapiID,
         FolderPath: folderPath,
         PhotoStartNumber: photoStartCountingNubmer,
+        GadanomriliaUNIQID: gadanomriliaUNIQID,
         Gadanomrilia: gadanomrilia,
-        GadanomriliaFotoebi: gadanomriliaFotoebi,
+        GadanomriliaFotoebi: gadanomriliaFotoebi
       };
       const response = await axios.post(apiUrl, payload);
       alert("წარმატებით დასრულდა: " + response.data.message);
@@ -135,6 +172,7 @@ const EqselisWakitxva = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="Main-for-eqselisWakitxva">
       <div className="obtainer">
@@ -165,6 +203,20 @@ const EqselisWakitxva = () => {
             </label>
           </div>
         </div>
+        {/* ფოტოების გადანომვრა ექსელის ოლდ უნიქკიდებით */}
+        <div>
+          <input
+            value={gadanomriliaUNIQID}
+            onChange={(e) => setGadanomriliaUNIQID(e.target.checked)}
+            type="checkbox"
+            id="myCheckboxFotoebi"
+          />
+
+          <label htmlFor="myCheckboxFotoebi" style={{ fontSize: "12px" }}>
+            გადანომრილია UNIQID
+          </label>
+        </div>
+        
         <div className="row-excel1">
           <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
           <input
@@ -188,6 +240,7 @@ const EqselisWakitxva = () => {
             title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
           />
         </div>
+
         <div className="row-excel1">
           <label>ამოირჩიეთ access ფაილი</label>
           <input
@@ -219,6 +272,7 @@ const EqselisWakitxva = () => {
             გადანომრილია ფოტოები
           </label>
         </div>
+
         {/* Gadanomvra Component */}
         <div className="main-container">
           <div className="row">

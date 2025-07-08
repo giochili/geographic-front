@@ -13,8 +13,10 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.2",
-    "electron": "^30.0.0",
+    "electron": "^30.5.1",
+    "electron-builder": "^25.1.8",
     "electron-dialog": "^2.0.0",
+    "electron-is-dev": "^3.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-contenteditable": "^3.3.7",
@@ -53,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@electron/remote": "^2.1.2"
   }
 }
