@@ -7,22 +7,7 @@ import "../../Styles/Qarsafari/eqselisWakitxva.css";
 const EqselisWakitxva = () => {
   const [UnicID, setUnicID] = useState(0);
 
-  const [folderPath, setFolderPath] = useState(
-    // "D:\\Documents\\Desktop\\Photoes"
-    // "D:\\Documents\\Desktop\\I_etapi\\Photoes"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\walka_photo_Resize"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\bolnisi_photo_Resize"
-    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Photoes"
-    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Photo"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\Photoes"
-    // "D:\\Projects\\2023\\Qarsafrebi\\test\\Photo"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\State"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\dmanisi_photo_Resize"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\Photoes_State"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V4\\Resized"
-    //aloeks D:\Projects\2025\QarsaffariDatvlebi\ALEKS\Gori\III\Photoes_New
-    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Photoes"
-  );
+  const [folderPath, setFolderPath] = useState("");
   const [gadanomriliaUNIQID, setGadanomriliaUNIQID] = useState(false);
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [gadanomriliaFotoebi, setGadanomriliaFotoebi] = useState(false);
@@ -44,69 +29,13 @@ const EqselisWakitxva = () => {
   //     alert("Error reading Excel file:", error);
   //   }
   // };
-  const [ExcelPath, setExcelPath] = useState(
-    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი\\Gardabani.xls"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\წალკა.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\ბოლნისი_1.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Gardabani_II_Etapi.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\tetriwyaro.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\დუშეთი.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\test\\tetriwyaro.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\ბოლნისი.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\dmanisi.xlsx"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\წალკა_v2.xlsx"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Kaspi_Windbreak_2025"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V4\\მცხეთა_ორიგინალი.xls"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\გორი_ორიგინალი.xls"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3\\გორი_ორიგინალი_II.xls"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\გორი_ორიგინალი_1_ეტაპი.xls"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-chortioznaet-V1\\გორი_ორიგინალი_3_ეტაპი.xls"
-    //"D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori_Etapi_2_final\\გორი_ორიგინალი_2_ეტაპი.xls"
-    //aleks
-
-    //"D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Gori\\III\\გორი_ორიგინალი_3_ეტაპი.xls"
-    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\ხაშური.xls"
-  );
-  const [newExcelDestination, setNewExcelDestination] = useState(
-    // "D:\\Documents\\Desktop\\resultoftest"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\result"
-    // "D:\\Projects\\2023Qarsafrebi\\ბოლნისი_V1\\result"
-    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\results"
-    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\result"
-    // "D:\\Projects\\2023\\Qarsafrebi\\test\\result"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\result"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\result"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\result"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\result"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\result"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V6\\result"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\result"
-    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\result"
-
-  );
-  const [accessFilePath, setAccessFilePath] = useState(
-    // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
-    // "D:\\Documents\\Desktop\\I_etapi\\Windbreak_Gardabani.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი_V1\\Windbreak_bolnisi.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\Windbreak_Walka.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\გარდაბანი-II-ეტაპი\\V2\\Widreak_Gardabani.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\თეთრიწყარო_v2\\Windbreak_Tetritskaro.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\test\\Windbreak_Tetritskaro.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დუშეთი\\dushetiADD\\20240521_Widnbreak_Dusheti_Damateba.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\ბოლნისი\\V3\\Windbreak_Bolnisi.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\დმანისი\\V4\\202409_Widbreak_Dmanisi_State_v2.mdb"
-    // "D:\\Projects\\2023\\Qarsafrebi\\წალკა\\V2\\202410_Widbreak_Tsalka_v2.mdb"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\20240826_Kaspi_Windbreak_State_Damateba.mdb"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V1\\202505_Windbreak_Gori_State_etapi1.mdb"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V3\\202506_Windbreak_Gori_State_etapi2.mdb"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-etapi-3-V1\\20250616_Windbreak_Gori_State_1_etapi_shemowmeba.mdb"
-    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Xashuri\\2\\Aleks_202506_Windbreak_Khashuri_State.mdb"
-  );
+  const [ExcelPath, setExcelPath] = useState("");
+  const [newExcelDestination, setNewExcelDestination] = useState("");
+  const [accessFilePath, setAccessFilePath] = useState("");
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
   const [etapiOptions, setEtapiOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Kashuri_Windbreak_State");
+  const [accessShitName, setAccessShitName] = useState("Mtskheta_Windbreak_State");
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
@@ -182,11 +111,11 @@ const EqselisWakitxva = () => {
           </Link>
           <label>ამოირჩიეთ ექსელის ფაილი</label>
           <input
-            type="file"
-            accept=".xlsx"
-            // value = {ExcelPath}
-            // onChange={(e) => setExcelPath(e.target.value)}
-            title="ამოირჩიეთ ექსელის ფაილი."
+            type="text"
+            value={ExcelPath}
+            onChange={(e) => setExcelPath(e.target.value)}
+            placeholder="შეიყვანეთ .xlsx/.xls ფაილის სრული მისამართი სერვერზე"
+            title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
           />
         </div>
         <div className="row-excel1">
@@ -195,10 +124,10 @@ const EqselisWakitxva = () => {
               value={calcVarjisFarti}
               onChange={(e) => setCalcVarjisFarti(e.target.checked)}
               type="checkbox"
-              id="myCheckbox"
+              id="calcVarjisFartiCheckbox"
             />
 
-            <label htmlFor="myCheckbox" style={{ fontSize: "12px" }}>
+            <label htmlFor="calcVarjisFartiCheckbox" style={{ fontSize: "12px" }}>
               დავთვალოთ ვარჯის ფართები ?
             </label>
           </div>
@@ -209,10 +138,10 @@ const EqselisWakitxva = () => {
             value={gadanomriliaUNIQID}
             onChange={(e) => setGadanomriliaUNIQID(e.target.checked)}
             type="checkbox"
-            id="myCheckboxFotoebi"
+            id="uniqidRenamedCheckbox"
           />
 
-          <label htmlFor="myCheckboxFotoebi" style={{ fontSize: "12px" }}>
+          <label htmlFor="uniqidRenamedCheckbox" style={{ fontSize: "12px" }}>
             გადანომრილია UNIQID
           </label>
         </div>
@@ -236,7 +165,7 @@ const EqselisWakitxva = () => {
             value={newExcelDestination}
             type="text"
             placeholder="შეავსეთ მისამართი"
-            // onChange={(e) => setNewExcelDestination(e.target.value)}
+            onChange={(e) => setNewExcelDestination(e.target.value)}
             title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
           />
         </div>
@@ -250,12 +179,11 @@ const EqselisWakitxva = () => {
             placeholder="შეიყვანეთ შიტის სახელი"
           />
           <input
-            // value={accessFilePath}
-            //onChange={(e) => setAccessFilePath(e.target.value)}
-            type="file"
-            accept=".mdb"
-            placeholder="insert path"
-            title="ამოირჩიეთ access ფაილი."
+            type="text"
+            value={accessFilePath}
+            onChange={(e) => setAccessFilePath(e.target.value)}
+            placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
+            title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
           />
         </div>
 
@@ -265,10 +193,10 @@ const EqselisWakitxva = () => {
             value={gadanomriliaFotoebi}
             onChange={(e) => setGadanomriliaFotoebi(e.target.checked)}
             type="checkbox"
-            id="myCheckboxFotoebi"
+            id="photosRenamedCheckbox"
           />
 
-          <label htmlFor="myCheckboxFotoebi" style={{ fontSize: "12px" }}>
+          <label htmlFor="photosRenamedCheckbox" style={{ fontSize: "12px" }}>
             გადანომრილია ფოტოები
           </label>
         </div>
@@ -295,10 +223,10 @@ const EqselisWakitxva = () => {
                   value={gadanomrilia}
                   onChange={(e) => setGadanomrilia(e.target.checked)}
                   type="checkbox"
-                  id="myCheckbox"
+                  id="renamedCheckbox"
                 />
 
-                <label htmlFor="myCheckbox" style={{ fontSize: "12px" }}>
+                <label htmlFor="renamedCheckbox" style={{ fontSize: "12px" }}>
                   გადანომრილია
                 </label>
               </div>

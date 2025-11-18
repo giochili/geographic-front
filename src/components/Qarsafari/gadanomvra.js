@@ -1,27 +1,31 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 // import * as XLSX from "xlsx";
 import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/qarsafari.css";
 import axios from "axios";
 
-const Gadanomvra = ({ cardDataArray }) => {
-  const [folderPath, setFolderPath] = useState(
-    // "D:\\Documents\\Desktop\\Photoes"
-    // "D:\\Documents\\Desktop\\I_etapi\\Photoes"
-    // "D:\\MyWork\\2023\\Telavi_Qarsafari\\GARDABANI\\Photoes"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\fotoebi"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Mcxeta-V5-chamateba\\NewPhoto"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V2\\Photo"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-V4-fotos-marto\\New_Photo"
-    // "D:\\Projects\\2025\\QarsaffariDatvlebi\\Gori-final-Etap\\Gori-3-etapi-fotoebi-10"
-    //ALEKS
-    "D:\\Projects\\2025\\QarsaffariDatvlebi\\ALEKS\\Gori\\IV\\PhotoesRenamed"
-  );
+const Gadanomvra = () => {
+  const [folderPath, setFolderPath] = useState("");
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
   const apiUrl = "https://localhost:7027/RenamePhotosInFolder";
+
+  const sanitizePath = (text) => {
+    if (!text) return "";
+    const trimmed = text.trim();
+    // remove wrapping quotes if user pasted with them
+    return trimmed.replace(/^"|"$/g, "");
+  };
+
+  const pasteFolderFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setFolderPath(sanitizePath(text));
+    } catch (e) {
+      // ignore if clipboard not available; user can paste manually
+    }
+  };
 
   const handleSubmit = async () => {
     const payload = {
@@ -55,7 +59,12 @@ const Gadanomvra = ({ cardDataArray }) => {
               // webkitdirectory=""
               title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
               type="text"
+              placeholder="D:\\Projects\\2025\\...\\Photoes"
             />
+            <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
+              <button type="button" onClick={pasteFolderFromClipboard} title="ჩასმა კლიპბორდიდან">ჩასმა</button>
+              <button type="button" onClick={() => setFolderPath("")} title="გასუფთავება">გასუფთავება</button>
+            </div>
           </div>
           <div className="flex">
             <div>

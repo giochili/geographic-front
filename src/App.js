@@ -10,6 +10,7 @@ import QarsafariGroup from "./components/QarsafariGroup/qarsafariGroup";
 import PhotoDateCheck from "./components/Qarsafari/photoDateCheck";
 import ChromeBotPage from "./ChromBot/ChromeBotpage";
 import PhotoSplit from "./PhotoSplit/PhotoSplit";
+import WashlaFolderebisMdbsMixedvit from "./components/Qarsafari/washlaFolderebisMdbsMixedvit";
 function App() {
   return (
     <Routes>
@@ -23,6 +24,7 @@ function App() {
       <Route path="/photoDateCheck" element={<PhotoDateCheck />} />
       <Route path="/ChromBot/ChromeBotPage" element={<ChromeBotPage />} />
       <Route path="/PhotoSplit/PhotoSplit" element={<PhotoSplit />} />
+      <Route path="/washlaFolderebisMdbsMixedvit" element={<WashlaFolderebisMdbsMixedvit />} />
     </Routes>
   );
 }

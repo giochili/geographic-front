@@ -1,42 +1,33 @@
-
 import "../../Styles/Qarsafari/PhotoDateCheck.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import React from "react";
 
-const PhotoDateCheck = () => {
+const WashlaFolderebisMdbsMixedvit = () => {
   const [folderPath, setFolderPath] = useState("");
   const [resultPath, setResultPath] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  const pickFolder = async () => {
+  const pickFolder = async (setter) => {
     try {
       if (window.nativePicker && window.nativePicker.selectFolder) {
         const fullPath = await window.nativePicker.selectFolder();
-        if (fullPath) setFolderPath(fullPath);
+        if (fullPath) setter(fullPath);
         return;
       }
       if (window.showDirectoryPicker) {
         await window.showDirectoryPicker();
-        alert("ბრაუზერის შეზღუდვის გამო, გთხოვთ ხელით შეიყვანოთ სერვერის სრული მისამართი.");
+        alert(
+          "ბრაუზერის შეზღუდვის გამო, გთხოვთ ხელით შეიყვანოთ სერვერის სრული მისამართი."
+        );
       }
     } catch {}
   };
 
-  const pickResultFolder = async () => {
-    try {
-      if (window.nativePicker && window.nativePicker.selectFolder) {
-        const fullPath = await window.nativePicker.selectFolder();
-        if (fullPath) setResultPath(fullPath);
-        return;
-      }
-      if (window.showDirectoryPicker) {
-        await window.showDirectoryPicker();
-        alert("ბრაუზერის შეზღუდვის გამო, გთხოვთ ხელით შეიყვანოთ სერვერის სრული მისამართი.");
-      }
-    } catch {}
-  };
+  const handlePickFolder = () => pickFolder(setFolderPath);
+  const handlePickResultFolder = () => pickFolder(setResultPath);
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -66,10 +57,12 @@ const PhotoDateCheck = () => {
             <input
               type="text"
               value={folderPath}
-              onChange={(event) => setFolderPath(event.target.value)}
+              onChange={(e) => setFolderPath(e.target.value)}
               placeholder="შეიტანეთ სერვერზე არსებული ფოტოების მისამართი"
             />
-            <button onClick={pickFolder} title="ამოირჩიეთ ფოლდერი (ბეტა)">ამორჩევა</button>
+            <button onClick={handlePickFolder} title="ამოირჩიეთ ფოლდერი (ბეტა)">
+              ამორჩევა
+            </button>
           </div>
         </div>
         <div className="item-row">
@@ -78,10 +71,15 @@ const PhotoDateCheck = () => {
             <input
               type="text"
               value={resultPath}
-              onChange={(event) => setResultPath(event.target.value)}
+              onChange={(e) => setResultPath(e.target.value)}
               placeholder="შეიტანეთ სერვერზე არსებული შედეგების მისამართი"
             />
-            <button onClick={pickResultFolder} title="ამოირჩიეთ ფოლდერი (ბეტა)">ამორჩევა</button>
+            <button
+              onClick={handlePickResultFolder}
+              title="ამოირჩიეთ ფოლდერი (ბეტა)"
+            >
+              ამორჩევა
+            </button>
           </div>
         </div>
         <div style={{ display: "flex", gap: "20px" }}>
@@ -93,4 +91,4 @@ const PhotoDateCheck = () => {
     </div>
   );
 };
-export default PhotoDateCheck;
+export default WashlaFolderebisMdbsMixedvit;

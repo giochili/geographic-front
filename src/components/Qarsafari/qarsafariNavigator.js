@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/qarsafariNavigator.css";
 
-const QarsafaiPage = ({ cardDataArray }) => {
+const QarsafaiPage = () => {
   return (
     <div className="Main">
       <Link className="back-button" to="/">
@@ -45,6 +45,16 @@ const QarsafaiPage = ({ cardDataArray }) => {
           <div className="admin-panel-background">
             <div className="text" style={{ color: "black" }}>
             ადმინკა
+            </div>
+          </div>
+        </Link>
+      </div>
+      
+      <div className="second-level-container">
+        <Link className="link" to="/washlaFolderebisMdbsMixedvit">
+          <div className="admin-panel-background">
+            <div className="text" style={{ color: "Red" }}>
+            ფოლდერების წაშლა MDB-ს მიხედვით 
             </div>
           </div>
         </Link>
