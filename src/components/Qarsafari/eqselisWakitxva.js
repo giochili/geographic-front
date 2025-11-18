@@ -3,6 +3,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
+import StatusMessage from "../common/StatusMessage";
+import PathInputActions from "../common/PathInputActions";
+import { sanitizeWindowsPath } from "../../utils/pathUtils";
+import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const EqselisWakitxva = () => {
   const [UnicID, setUnicID] = useState(0);
@@ -41,6 +45,7 @@ const EqselisWakitxva = () => {
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,7 +72,20 @@ const EqselisWakitxva = () => {
 
     fetchData();
   }, []);
+  const pasteFromClipboard = async (setter) => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setter(sanitizeWindowsPath(text));
+    } catch {
+      setStatus({
+        type: "error",
+        text: "კლიპბორდიდან ჩასმა ვერ მოხერხდა. სცადეთ Ctrl + V.",
+      });
+    }
+  };
+
   const handleSubmit = async () => {
+    setStatus(null);
     try {
       setLoading(true);
       setIsDisabledGashvebaButton(true);
@@ -85,18 +103,22 @@ const EqselisWakitxva = () => {
         PhotoStartNumber: photoStartCountingNubmer,
         GadanomriliaUNIQID: gadanomriliaUNIQID,
         Gadanomrilia: gadanomrilia,
-        GadanomriliaFotoebi: gadanomriliaFotoebi
+        GadanomriliaFotoebi: gadanomriliaFotoebi,
       };
       const response = await axios.post(apiUrl, payload);
-      alert("წარმატებით დასრულდა: " + response.data.message);
-      setIsDisabledGashvebaButton(false);
-      setLoading(false);
+      setStatus({
+        type: "success",
+        text: response.data.message || "ოპერაცია წარმატებით დასრულდა.",
+      });
     } catch (error) {
-      if (error.response.data.success) {
-        alert("წარმატებით დასრულდა");
-      } else {
-        alert(error.response.data.message);
-      }
+      setStatus({
+        type: "error",
+        text: getFriendlyErrorMessage(
+          error,
+          "დაფიქსირდა შეცდომა. გთხოვთ გადაამოწმოთ მონაცემები და სცადოთ ხელახლა."
+        ),
+      });
+    } finally {
       setIsDisabledGashvebaButton(false);
       setLoading(false);
     }
@@ -116,6 +138,10 @@ const EqselisWakitxva = () => {
             onChange={(e) => setExcelPath(e.target.value)}
             placeholder="შეიყვანეთ .xlsx/.xls ფაილის სრული მისამართი სერვერზე"
             title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
+          />
+          <PathInputActions
+            onPaste={() => pasteFromClipboard(setExcelPath)}
+            onClear={() => setExcelPath("")}
           />
         </div>
         <div className="row-excel1">
@@ -168,6 +194,10 @@ const EqselisWakitxva = () => {
             onChange={(e) => setNewExcelDestination(e.target.value)}
             title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
           />
+          <PathInputActions
+            onPaste={() => pasteFromClipboard(setNewExcelDestination)}
+            onClear={() => setNewExcelDestination("")}
+          />
         </div>
 
         <div className="row-excel1">
@@ -184,6 +214,10 @@ const EqselisWakitxva = () => {
             onChange={(e) => setAccessFilePath(e.target.value)}
             placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
             title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
+          />
+          <PathInputActions
+            onPaste={() => pasteFromClipboard(setAccessFilePath)}
+            onClear={() => setAccessFilePath("")}
           />
         </div>
 
@@ -207,14 +241,14 @@ const EqselisWakitxva = () => {
             <div className="flex">
               <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
               <input
-                // className="folderfileinput"
-                // type="file"
                 onChange={(e) => setFolderPath(e.target.value)}
                 value={folderPath}
-                // directory=""
-                // webkitdirectory=""
                 title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
                 type="text"
+              />
+              <PathInputActions
+                onPaste={() => pasteFromClipboard(setFolderPath)}
+                onClear={() => setFolderPath("")}
               />
             </div>
             <div className="flex">
@@ -275,19 +309,21 @@ const EqselisWakitxva = () => {
         <div className="row-excel-buttons">
           <button
             onClick={handleSubmit}
-            disabled={IsDisabledGashvebaButton}
+            disabled={IsDisabledGashvebaButton || loading}
             style={{
               backgroundColor:
-                IsDisabledGashvebaButton === true ? "gray" : "#4caf50",
+                IsDisabledGashvebaButton === true || loading
+                  ? "gray"
+                  : "#4caf50",
             }}
           >
-            {" "}
-            გაშვება{" "}
+            {loading ? "მუშავდება..." : "გაშვება"}
           </button>
           <Link className="gadavifiqre-btn" to="/qarsafariNavigator">
             გადავიფიქრე
           </Link>
         </div>
+        <StatusMessage status={status} />
       </div>
     </div>
   );

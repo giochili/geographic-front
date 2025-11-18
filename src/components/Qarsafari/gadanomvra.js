@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/qarsafari.css";
 import axios from "axios";
+import StatusMessage from "../common/StatusMessage";
+import PathInputActions from "../common/PathInputActions";
+import { sanitizeWindowsPath } from "../../utils/pathUtils";
+import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const Gadanomvra = () => {
   const [folderPath, setFolderPath] = useState("");
@@ -10,32 +14,52 @@ const Gadanomvra = () => {
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
   const apiUrl = "https://localhost:7027/RenamePhotosInFolder";
-
-  const sanitizePath = (text) => {
-    if (!text) return "";
-    const trimmed = text.trim();
-    // remove wrapping quotes if user pasted with them
-    return trimmed.replace(/^"|"$/g, "");
-  };
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const pasteFolderFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      setFolderPath(sanitizePath(text));
+      setFolderPath(sanitizeWindowsPath(text));
     } catch (e) {
-      // ignore if clipboard not available; user can paste manually
+      setStatus({
+        type: "error",
+        text: "კლიპბორდიდან ჩასმა მიუწვდომელია. სცადეთ ხელით ჩასმა.",
+      });
     }
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      folderPath: folderPath,
-      folderStartNumber: folderStartCountingNumber,
-      photoStartNumber: photoStartCountingNubmer,
-      Gadanomrilia: gadanomrilia,
-    };
-    const response = await axios.post(apiUrl, payload);
-    if (response.data.Success) {
+    setStatus(null);
+    setLoading(true);
+    try {
+      const payload = {
+        folderPath: folderPath,
+        folderStartNumber: folderStartCountingNumber,
+        photoStartNumber: photoStartCountingNubmer,
+        Gadanomrilia: gadanomrilia,
+      };
+      const response = await axios.post(apiUrl, payload);
+      if (response.data.Success) {
+        setStatus({
+          type: "success",
+          text: response.data.message || "ოპერაცია წარმატებით დასრულდა.",
+        });
+      } else {
+        throw new Error(
+          response.data.message || "ვერ მოხერხდა ფოტოების გადანომვრა."
+        );
+      }
+    } catch (error) {
+      setStatus({
+        type: "error",
+        text: getFriendlyErrorMessage(
+          error,
+          "სერვერთან კავშირი ვერ მოხერხდა. გთხოვთ სცადოთ მოგვიანებით."
+        ),
+      });
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -61,10 +85,10 @@ const Gadanomvra = () => {
               type="text"
               placeholder="D:\\Projects\\2025\\...\\Photoes"
             />
-            <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
-              <button type="button" onClick={pasteFolderFromClipboard} title="ჩასმა კლიპბორდიდან">ჩასმა</button>
-              <button type="button" onClick={() => setFolderPath("")} title="გასუფთავება">გასუფთავება</button>
-            </div>
+            <PathInputActions
+              onPaste={pasteFolderFromClipboard}
+              onClear={() => setFolderPath("")}
+            />
           </div>
           <div className="flex">
             <div>
@@ -105,11 +129,14 @@ const Gadanomvra = () => {
         </div>
         {/* Fourth Row: Two Buttons */}
         <div className="row">
-          <button onClick={handleSubmit}>გადანომვრა</button>
+          <button onClick={handleSubmit} disabled={loading}>
+            {loading ? "გადამუშავება..." : "გადანომვრა"}
+          </button>
           <Link className="gadavifiqre-btn" to={"/qarsafariNavigator"}>
             გადავიფიქრე
           </Link>
         </div>
+        <StatusMessage status={status} />
       </div>
     </div>
   );
