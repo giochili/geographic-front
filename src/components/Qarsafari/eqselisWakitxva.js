@@ -9,8 +9,9 @@ import { sanitizeWindowsPath } from "../../utils/pathUtils";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const EqselisWakitxva = () => {
-  const [UnicID, setUnicID] = useState(0);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const [UnicID, setUnicID] = useState(0);
   const [folderPath, setFolderPath] = useState("");
   const [gadanomriliaUNIQID, setGadanomriliaUNIQID] = useState(false);
   const [gadanomrilia, setGadanomrilia] = useState(false);
@@ -49,7 +50,7 @@ const EqselisWakitxva = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7027/GetProjectNamesList";
+        const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
       } catch (error) {
@@ -62,7 +63,7 @@ const EqselisWakitxva = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7027/GetEtapiIDList";
+        const apiUrl = `${API_BASE_URL}/GetEtapiIDList`;
         const response = await axios.get(apiUrl);
         setEtapiOptions(response.data.data);
       } catch (error) {
@@ -89,7 +90,7 @@ const EqselisWakitxva = () => {
     try {
       setLoading(true);
       setIsDisabledGashvebaButton(true);
-      const apiUrl = "https://localhost:7027/ExcelCalculations";
+      const apiUrl = `${API_BASE_URL}/ExcelCalculations`;
       const payload = {
         UnicIDStartNumber: UnicID,
         ExcelPath: ExcelPath,

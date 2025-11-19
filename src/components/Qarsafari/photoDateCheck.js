@@ -14,6 +14,7 @@ const PhotoDateCheck = () => {
   const [resultPath, setResultPath] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const showPickerWarning = () =>
     setStatus({
@@ -62,7 +63,7 @@ const PhotoDateCheck = () => {
     setStatus(null);
     setLoading(true);
 
-    const apiUrl = "https://localhost:7027/GetCheckPhotoDate";
+    const apiUrl = `${API_BASE_URL}/GetCheckPhotoDate`;
     const payload = { folderPath: folderPath, resultPath: resultPath };
 
     try {

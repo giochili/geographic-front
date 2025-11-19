@@ -10,10 +10,11 @@ import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const Gadanomvra = () => {
   const [folderPath, setFolderPath] = useState("");
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
-  const apiUrl = "https://localhost:7027/RenamePhotosInFolder";
+  const apiUrl = `${API_BASE_URL}/RenamePhotosInFolder`;
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 

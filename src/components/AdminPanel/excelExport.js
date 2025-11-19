@@ -55,7 +55,7 @@ const ExcelExport = () => {
 
   const handleAccessSubmit = async () => {
     setLoading(true);
-    const apiUrl = "https://localhost:7027/ColumnNameTransferFromAccess";
+    const apiUrl = `${API_BASE_URL}/ColumnNameTransferFromAccess`;
     const payload = {
       AccessPath: accessActualPath,
       AccessSheetName: accessSheetName,

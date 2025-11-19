@@ -6,7 +6,7 @@ const ChromeBotPage = () => {
   const [excelPath, setExcelPath] = useState("D:\\My Documents\\Desktop\\test.xlsx");
   const [destination, setDestination] = useState("D:\\My Documents\\Desktop");
   const [loading, setLoading] = useState(false);
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleExcelFileChange = (event) => {
     const selectedFolder = event.target.value;
@@ -38,7 +38,7 @@ const ChromeBotPage = () => {
 
     setLoading(true);
 
-    const apiUrl = "https://localhost:7027/BotChromeArguments";
+    const apiUrl = `${API_BASE_URL}/BotChromeArguments`;
     const payload = { Excelpath: excelPath, Destination: destination };
 
     try {

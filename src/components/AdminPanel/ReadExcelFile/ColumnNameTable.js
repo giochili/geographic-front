@@ -218,10 +218,13 @@ function reducer(state, action) {
 }
 
 const ColumnNameTable = (ExcelOptions) => {
+
+
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7027/GetSQLColumnNamesList";
+        const apiUrl = `${API_BASE_URL}/GetSQLColumnNamesList`;
         const response = await axios.get(apiUrl);
 
         if (ExcelOptions.ExcelOptions.length > 0) {
@@ -303,7 +306,7 @@ const ColumnNameTable = (ExcelOptions) => {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const apiUrl = "https://localhost:7027/GetSQLColumnNamesList";
+              const apiUrl = `${API_BASE_URL}/GetSQLColumnNamesList`;
               const response = await axios.get(apiUrl);
               const filteredData = response.data.data.filter((item) => {
                 return item.excelName !== null;
@@ -376,7 +379,7 @@ const ColumnNameTable = (ExcelOptions) => {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const apiUrl = "https://localhost:7027/GetSQLColumnNamesList";
+              const apiUrl = `${API_BASE_URL}/GetSQLColumnNamesList`;
               const response = await axios.get(apiUrl);
               const filteredData = response.data.data.filter((item) => {
                 return item.accessName !== null;
@@ -440,7 +443,7 @@ const ColumnNameTable = (ExcelOptions) => {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const apiUrl = "https://localhost:7027/GetSQLColumnNamesList";
+              const apiUrl = `${API_BASE_URL}/GetSQLColumnNamesList`;
               const response = await axios.get(apiUrl);
               const filteredData = response.data.data.filter((item) => {
                 return item.accessName !== null;
@@ -558,7 +561,7 @@ const ColumnNameTable = (ExcelOptions) => {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const apiUrl = "https://localhost:7027/GetSQLColumnNamesList";
+              const apiUrl = `${API_BASE_URL}/GetSQLColumnNamesList`;
               const response = await axios.get(apiUrl);
               const filteredData = response.data.data.filter((item) => {
                 return item.groupMethod !== null;
@@ -608,7 +611,7 @@ const ColumnNameTable = (ExcelOptions) => {
 
           // If the user confirms, proceed with deletion
           if (confirmed) {
-            const apiUrl = "https://localhost:7027/DeleteRow";
+            const apiUrl = `${API_BASE_URL}/DeleteRow`;
             const payload = {
               Id: row.original.id,
             };
@@ -699,7 +702,7 @@ const ColumnNameTable = (ExcelOptions) => {
   //   // უშუალოდ მეთოდი სად და რეები უნდა წავიდეს
 
   //   axios
-  //     .post("https://localhost:7027/SaveColumnName", payLoad.columnNameDTO)
+  //     .post(`${API_BASE_URL}/SaveColumnName`, payLoad.columnNameDTO)
   //     .then((response) => {
   //       console.log(response);
   //       //setData(response.data)
@@ -750,7 +753,7 @@ const ColumnNameTable = (ExcelOptions) => {
     if (confirmed) {
       // Perform POST request to save changes
       axios
-        .post("https://localhost:7027/SaveColumnName", payLoad.columnNameDTO)
+        .post(`${API_BASE_URL}/SaveColumnName`, payLoad.columnNameDTO)
         .then((response) => {
           console.log(response);
           // Optionally, handle response or update state

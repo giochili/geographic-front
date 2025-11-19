@@ -4,6 +4,7 @@ import axios from "axios";
 
 const PhotoSplit = () => {
   const [photosBefore, setPhotosBefore] = useState("");
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [destination, setDestination] = useState(
     "D:\\Projects\\2024\\CHromeBotT"
   );
@@ -27,7 +28,7 @@ const PhotoSplit = () => {
 
     setLoading(true);
 
-    const apiUrl = "https://localhost:7027/PostPhotoSplitPaths";
+    const apiUrl = `{API_BASE_URL}/PostPhotoSplitPaths`;
     const payload = {
       gadanomriliPhotoFolderPath: photosBefore,
       destinationFolderPath: destination,

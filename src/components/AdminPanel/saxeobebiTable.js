@@ -221,6 +221,7 @@ function reducer(state, action) {
 
 const SaxeobaTable = () => {
   const [projectNameID, setProjectNameID] = useState(1500);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   let columns = [
     {
       id: "name",
@@ -269,7 +270,7 @@ const SaxeobaTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7027/getSaxeobaList";
+        const apiUrl = `${API_BASE_URL}/getSaxeobaList`;
         const response = await axios.get(apiUrl);
         //დისპაჩი აკეთებს data ში ენდფოინთის შედეგის ჩაწერას
         dispatch({ type: "UPDATE_DATA", payload: response.data.data });
@@ -285,7 +286,7 @@ const SaxeobaTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = "https://localhost:7027/GetProjectNamesList";
+        const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
       } catch (error) {
@@ -310,7 +311,7 @@ const SaxeobaTable = () => {
       })),
     };
     axios
-      .post("https://localhost:7027/SaveSaxeobebi", payLoad.DictionaryDTO)
+      .post(`${API_BASE_URL}/SaveSaxeobebi`, payLoad.DictionaryDTO)
       .then((response) => {
         // Assuming the response.data is the updated list
         setData(response.data);
