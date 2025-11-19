@@ -5,6 +5,7 @@ import ColumnNameTable from "./ReadExcelFile/ColumnNameTable";
 import "../../Styles/AdminPanel/Loader.css";
 
 const ExcelExport = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [accessActualPath, setAccessActualPath] = useState(
     // "D:\\Projects\\qarsafrebi\\kaspi\\Kaspi_Windbreak.mdb"
     // "D:\\Documents\\Desktop\\I_etapi\\Windbreak - Gardabani.mdb"
@@ -25,8 +26,7 @@ const ExcelExport = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
-
-    const apiUrl = "https://localhost:7027/ColumnNameTransfer";
+    const apiUrl = `${API_BASE_URL}/Dictionary/ColumnNameTransfer`;
     const payload = {
       ExcelPath: excelActualPath,
     };
@@ -103,7 +103,7 @@ const ExcelExport = () => {
               type="file"
               accept=".xlsx"
               title="ამოირჩიეთ ექსელის ფაილი"
-              // onChange={(e) => excelPath(e)}
+            // onChange={(e) => excelPath(e)}
             />
             <div style={{ display: "flex" }}>
               <button onClick={handleSubmit}>წაკითხვა</button>
@@ -121,7 +121,7 @@ const ExcelExport = () => {
               type="file"
               accept=".mdb"
               title="ამოირჩიეთ ექსესის ფაილი"
-              // onChange={(e) => excelPath(e)}
+            // onChange={(e) => excelPath(e)}
             />
             <div style={{ display: "flex" }}>
               <button onClick={handleAccessSubmit}>წაკითხვა</button>
