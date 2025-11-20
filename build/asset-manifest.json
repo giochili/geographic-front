@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.be5c1fc2.css",
-    "main.js": "/static/js/main.1c0714d6.js",
-    "static/js/453.c0158832.chunk.js": "/static/js/453.c0158832.chunk.js",
-    "static/media/pexels-michael-block-3225517.jpg": "/static/media/pexels-michael-block-3225517.dfc5ff495f34755150b9.jpg",
-    "static/media/pexels-karolina-grabowska-4491459.jpg": "/static/media/pexels-karolina-grabowska-4491459.331ed4d6cf3e69b33fc7.jpg",
-    "static/media/pexels-pavel-danilyuk-7654590.jpg": "/static/media/pexels-pavel-danilyuk-7654590.d5ba7308c512a0a560c0.jpg",
-    "static/media/pexels-luis-gomes-546819.jpg": "/static/media/pexels-luis-gomes-546819.c99f20885941ed9dc8e1.jpg",
-    "static/media/chrome-bott.jpg": "/static/media/chrome-bott.91af49fb4912f3268b54.jpg",
-    "index.html": "/index.html",
-    "main.be5c1fc2.css.map": "/static/css/main.be5c1fc2.css.map",
-    "main.1c0714d6.js.map": "/static/js/main.1c0714d6.js.map",
-    "453.c0158832.chunk.js.map": "/static/js/453.c0158832.chunk.js.map"
+    "main.css": "/GeographicDynamic/static/css/main.8fa296f4.css",
+    "main.js": "/GeographicDynamic/static/js/main.1358d2fc.js",
+    "static/js/453.c0158832.chunk.js": "/GeographicDynamic/static/js/453.c0158832.chunk.js",
+    "static/media/pexels-michael-block-3225517.jpg": "/GeographicDynamic/static/media/pexels-michael-block-3225517.dfc5ff495f34755150b9.jpg",
+    "static/media/pexels-karolina-grabowska-4491459.jpg": "/GeographicDynamic/static/media/pexels-karolina-grabowska-4491459.331ed4d6cf3e69b33fc7.jpg",
+    "static/media/pexels-pavel-danilyuk-7654590.jpg": "/GeographicDynamic/static/media/pexels-pavel-danilyuk-7654590.d5ba7308c512a0a560c0.jpg",
+    "static/media/pexels-luis-gomes-546819.jpg": "/GeographicDynamic/static/media/pexels-luis-gomes-546819.c99f20885941ed9dc8e1.jpg",
+    "static/media/chrome-bott.jpg": "/GeographicDynamic/static/media/chrome-bott.91af49fb4912f3268b54.jpg",
+    "index.html": "/GeographicDynamic/index.html",
+    "main.8fa296f4.css.map": "/GeographicDynamic/static/css/main.8fa296f4.css.map",
+    "main.1358d2fc.js.map": "/GeographicDynamic/static/js/main.1358d2fc.js.map",
+    "453.c0158832.chunk.js.map": "/GeographicDynamic/static/js/453.c0158832.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.be5c1fc2.css",
-    "static/js/main.1c0714d6.js"
+    "static/css/main.8fa296f4.css",
+    "static/js/main.1358d2fc.js"
   ]
 }
