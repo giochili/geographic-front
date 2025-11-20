@@ -50,7 +50,7 @@ function SideBarPanel() {
           >
             <h2>Sidebar</h2>
           </MenuItem>
-          <NavLink className="navLink" to="/">
+          <NavLink className="navLink" to="/qarsafariNavigator">
             <MenuItem icon={<HomeOutlinedIcon />}>მთავარი</MenuItem>
           </NavLink>
 

@@ -8,13 +8,13 @@ import PathInputActions from "../common/PathInputActions";
 import { sanitizeWindowsPath } from "../../utils/pathUtils";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
-const Gadanomvra = () => {
+const GadanomvraEtapiErti = () => {
   const [folderPath, setFolderPath] = useState("");
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState();
   const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
-  const apiUrl = `${API_BASE_URL}/RenamePhotosInFolder`;
+  const apiUrl = `${API_BASE_URL}/RenamePhotosInFolderFirstStep`;
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -63,18 +63,17 @@ const Gadanomvra = () => {
       setLoading(false);
     }
   };
-  return (<div>
-
+  return (
+    
     <div className="parent-container">
       {/* Top Arrow Button */}
+      
 
       {/* Gadanomvra Component */}
       <div className="main-container">
-        <Link className="back-button" to="/etapiOriNavigator">
+        <Link className="back-button" to="/etapiErtiNavigator">
           &#8592; უკან
         </Link>
-    <header className="header"> მეორე ეტაპი II</header>
-
         <div className="row">
           <div className="flex">
             <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
@@ -136,15 +135,14 @@ const Gadanomvra = () => {
           <button onClick={handleSubmit} disabled={loading}>
             {loading ? "გადამუშავება..." : "გადანომვრა"}
           </button>
-          <Link className="gadavifiqre-btn" to={"/etapiOriNavigator"}>
+          <Link className="gadavifiqre-btn" to={"/etapiErtiNavigator"}>
             გადავიფიქრე
           </Link>
         </div>
         <StatusMessage status={status} />
       </div>
     </div>
-    </div>
   );
 };
 
-export default Gadanomvra;
+export default GadanomvraEtapiErti;

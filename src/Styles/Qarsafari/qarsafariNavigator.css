@@ -7,7 +7,7 @@
 .Main {
   display: flex;
   flex-wrap: wrap;
-  height: 100vh;
+  height: 100%;
   align-items: center;
   justify-content: center;
   gap: 50px;
@@ -16,6 +16,13 @@
 }
 .second-level-container {
   display: flex;
+}
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightsteelblue;
+  font-size: 2em;
 }
 .gadanomvra-background {
   position: relative;

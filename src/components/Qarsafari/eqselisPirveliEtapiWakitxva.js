@@ -8,7 +8,7 @@ import PathInputActions from "../common/PathInputActions";
 import { sanitizeWindowsPath } from "../../utils/pathUtils";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
-const EqselisWakitxva = () => {
+const EqselisPirveliEtapiWakitxva = () => {
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [UnicID, setUnicID] = useState(0);
@@ -50,7 +50,7 @@ const EqselisWakitxva = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
+        const apiUrl = `${API_BASE_URL}/GetProjectNamesListFirstStep`;
         const response = await axios.get(apiUrl);
         setOptions(response.data.data);
       } catch (error) {
@@ -63,7 +63,7 @@ const EqselisWakitxva = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${API_BASE_URL}/GetEtapiIDList`;
+        const apiUrl = `${API_BASE_URL}/GetEtapiIDListFirstStep`;
         const response = await axios.get(apiUrl);
         setEtapiOptions(response.data.data);
       } catch (error) {
@@ -90,7 +90,7 @@ const EqselisWakitxva = () => {
     try {
       setLoading(true);
       setIsDisabledGashvebaButton(true);
-      const apiUrl = `${API_BASE_URL}/ExcelCalculations`;
+      const apiUrl = `${API_BASE_URL}/ExcelCalculationsFirstStep`;
       const payload = {
         UnicIDStartNumber: UnicID,
         ExcelPath: ExcelPath,
@@ -125,16 +125,16 @@ const EqselisWakitxva = () => {
     }
   };
 
-  return (<div>
+  return (
+    <div>
+
     <header className="header">
-        მეორე ეტაპი II
+        პირველი ეტაპი I
       </header>
     <div className="Main-for-eqselisWakitxva">
-      
-
       <div className="obtainer">
         <div className="row-excel1">
-          <Link className="back-button" to="/etapiOriNavigator">
+          <Link className="back-button" to="/etapiErtiNavigator">
             &#8592; უკან
           </Link>
           <label>ამოირჩიეთ ექსელის ფაილი</label>
@@ -142,7 +142,7 @@ const EqselisWakitxva = () => {
             type="text"
             value={ExcelPath}
             onChange={(e) => setExcelPath(e.target.value)}
-            placeholder="შეიყვანეთ.xlsx/.xls ფორმატი"
+            placeholder="შეიყვანეთ .xlsx/.xls ფაილის სრული მისამართი სერვერზე"
             title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
           />
           <PathInputActions
@@ -218,7 +218,7 @@ const EqselisWakitxva = () => {
             type="text"
             value={accessFilePath}
             onChange={(e) => setAccessFilePath(e.target.value)}
-            placeholder=".mdb მისამართი"
+            placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
             title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
           />
           <PathInputActions
@@ -302,14 +302,14 @@ const EqselisWakitxva = () => {
               </option>
             ))}
           </select>
-          <select value={84} disabled>
+          <select value={83} disabled>
             <option value={0}></option>
             {etapiOptions.map((option) => (
-              <option key={option.id} value={option.id}>
+                <option key={option.id} value={option.id}>
                 {option.name}
-              </option>
+                </option>
             ))}
-          </select>
+            </select>
         </div>
         {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">
@@ -325,7 +325,7 @@ const EqselisWakitxva = () => {
           >
             {loading ? "მუშავდება..." : "გაშვება"}
           </button>
-          <Link className="gadavifiqre-btn" to="/etapiOriNavigator">
+          <Link className="gadavifiqre-btn" to="/etapiErtiNavigator">
             გადავიფიქრე
           </Link>
         </div>
@@ -336,4 +336,4 @@ const EqselisWakitxva = () => {
   );
 };
 
-export default EqselisWakitxva;
+export default EqselisPirveliEtapiWakitxva;
