@@ -8,17 +8,18 @@ const QarsafaiPage = () => {
       <Link className="back-button" to="/">
         &#8592; უკან
       </Link>
+      
       <div className="second-level-container">
-        <Link className="link" to="/gadanomvra">
-          <div className="gadanomvra-background">
-            <div className="text">გადანომვრა</div>
+        <Link className="link" to="/etapiErtiNavigator">
+          <div className="eqselis-wakitxva-background">
+            <div className="text">დათვლების პირველი ეტაპი</div>
           </div>
         </Link>
       </div>
       <div className="second-level-container">
-        <Link className="link" to="/eqselisWakitxva">
+        <Link className="link" to="/etapiOriNavigator">
           <div className="eqselis-wakitxva-background">
-            <div className="text">ექსელის წაკითხვა</div>
+            <div className="text">დათვლების მეორე ეტაპი</div>
           </div>
         </Link>
       </div>
