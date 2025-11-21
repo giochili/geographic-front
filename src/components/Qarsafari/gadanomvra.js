@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import axios from "axios";
 import StatusMessage from "../common/StatusMessage";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const Gadanomvra = () => {
@@ -14,6 +15,7 @@ const Gadanomvra = () => {
   const apiUrl = `${API_BASE_URL}/RenamePhotosInFolder`;
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   
   // Validation states
   const [errors, setErrors] = useState({
@@ -22,6 +24,13 @@ const Gadanomvra = () => {
     photoStartCountingNubmer: "",
   });
   const [touched, setTouched] = useState({});
+  
+  // Re-validate fields when checkbox state changes
+  useEffect(() => {
+    if (touched.folderStartCountingNumber) {
+      validateField("folderStartCountingNumber", folderStartCountingNumber);
+    }
+  }, [gadanomrilia]);
 
   const validateField = (fieldName, value) => {
     let error = "";
@@ -34,11 +43,15 @@ const Gadanomvra = () => {
         break;
       
       case "folderStartCountingNumber":
-        if (value && value !== "" && value !== 0) {
-          if (isNaN(value) || Number(value) <= 0) {
-            error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+        // Only validate if checkbox is NOT checked (field is enabled)
+        if (!gadanomrilia) {
+          if (value && value !== "" && value !== 0) {
+            if (isNaN(value) || Number(value) <= 0) {
+              error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+            }
           }
         }
+        // If checkbox is checked, no validation needed (field is disabled)
         break;
       
       case "photoStartCountingNubmer":
@@ -85,10 +98,8 @@ const Gadanomvra = () => {
     validateField(fieldName, value);
   };
 
-  const handleSubmit = async () => {
-    setStatus(null);
-    
-    // Validate all fields before submission
+  const handleSubmitClick = () => {
+    // Validate all fields before showing confirmation modal
     if (!validateAllFields()) {
       setStatus({
         type: "error",
@@ -96,7 +107,24 @@ const Gadanomvra = () => {
       });
       return;
     }
+    // Show confirmation modal
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirm = async () => {
+    // Close modal
+    setShowConfirmationModal(false);
     
+    // Proceed with submission
+    await executeSubmit();
+  };
+
+  const handleCancel = () => {
+    // Just close the modal
+    setShowConfirmationModal(false);
+  };
+
+  const executeSubmit = async () => {
     setStatus(null);
     setLoading(true);
     try {
@@ -161,12 +189,17 @@ const Gadanomvra = () => {
             <div className="checkbox-group">
               <input
                 value={gadanomrilia}
-                onChange={(e) => setGadanomrilia(e.target.checked)}
+                onChange={(e) => {
+                  setGadanomrilia(e.target.checked);
+                  if (touched.folderStartCountingNumber) {
+                    validateField("folderStartCountingNumber", folderStartCountingNumber);
+                  }
+                }}
                 type="checkbox"
                 id="myCheckbox"
               />
               <label htmlFor="myCheckbox">
-                გადანომრილია
+                გადანომრილია ფოლდერები  
               </label>
             </div>
           </div>
@@ -177,17 +210,24 @@ const Gadanomvra = () => {
             <input
               type="number"
               min="1"
-              placeholder="შეიყვანეთ რიცხვი"
+              disabled={gadanomrilia}
+              placeholder={gadanomrilia ? "გადანომრილია - არ არის საჭირო" : "შეიყვანეთ რიცხვი"}
               value={folderStartCountingNumber}
               onChange={(e) => {
-                setFolderStartCountingNumber(e.target.value);
-                if (touched.folderStartCountingNumber) {
-                  validateField("folderStartCountingNumber", e.target.value);
+                if (!gadanomrilia) {
+                  setFolderStartCountingNumber(e.target.value);
+                  if (touched.folderStartCountingNumber) {
+                    validateField("folderStartCountingNumber", e.target.value);
+                  }
                 }
               }}
-              onBlur={(e) => handleBlur("folderStartCountingNumber", e.target.value)}
-              className={errors.folderStartCountingNumber && touched.folderStartCountingNumber ? "input-error" : ""}
-              title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა ფოლდერების."
+              onBlur={(e) => {
+                if (!gadanomrilia) {
+                  handleBlur("folderStartCountingNumber", e.target.value);
+                }
+              }}
+              className={errors.folderStartCountingNumber && touched.folderStartCountingNumber && !gadanomrilia ? "input-error" : ""}
+              title={gadanomrilia ? "გადანომრილია ფოლდერები მონიშნულია - ველი გამორთულია" : "გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა ფოლდერების."}
             />
           </div>
 
@@ -213,7 +253,7 @@ const Gadanomvra = () => {
 
           {/* Buttons */}
           <div className="row-excel-buttons">
-            <button onClick={handleSubmit} disabled={loading}>
+            <button onClick={handleSubmitClick} disabled={loading}>
               {loading ? "გადამუშავება..." : "გადანომვრა"}
             </button>
             <Link className="gadavifiqre-btn" to={"/etapiOriNavigator"}>
@@ -223,6 +263,16 @@ const Gadanomvra = () => {
           <StatusMessage status={status} />
         </div>
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        message="დარწმუნებული ხართ რომ მზადააა გასაშვებად?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="დიახ"
+        cancelText="არა"
+      />
     </div>
   );
 };

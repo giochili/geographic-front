@@ -288,7 +288,11 @@ const SaxeobaTable = () => {
       try {
         const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
         const response = await axios.get(apiUrl);
-        setOptions(response.data.data);
+        // Sort options by Georgian alphabet
+        const sortedOptions = [...response.data.data].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "", 'ka', { sensitivity: 'base' })
+        );
+        setOptions(sortedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -328,18 +332,50 @@ const SaxeobaTable = () => {
         flexDirection: "column",
         justifyContent: "start",
         objectFit: "fill",
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
       }}
     >
-      <h1>სახეობების ცხრილი</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          marginBottom: "25px",
+          paddingBottom: "15px",
+          borderBottom: "2px solid #ecf0f1",
+          flexWrap: "wrap",
+          gap: "15px",
+          flexShrink: 0,
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+            fontSize: "24px",
+            fontWeight: 700,
+            color: "#2c3e50",
+          }}
+        >
+          სახეობების ცხრილი
+        </h1>
+      </div>
 
       <div
         style={{
           width: "100%",
-          height: "100%",
-          overflowX: "hidden",
+          flex: "1 1 auto",
+          overflow: "auto",
+          backgroundColor: "#ffffff",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <div style={{ overflow: "auto", display: "flex" }}>
+        <div style={{ overflow: "auto", display: "flex", flex: "1 1 auto", justifyContent: "center" }}>
           <div
             style={{
               flex: "1 1 auto",
@@ -359,20 +395,49 @@ const SaxeobaTable = () => {
         </div>
         <div
           style={{
-            height: 140,
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
-            flexDirection: "column",
+            marginTop: "20px",
+            paddingTop: "20px",
+            borderTop: "1px solid #ecf0f1",
           }}
         >
-          <div>
-            <p>
-              <button id="SaveSaxeobebi" onClick={SaveButton} type="button">
-                დამახსოვრება
-              </button>
-            </p>
-          </div>
+          <button
+            id="SaveSaxeobebi"
+            onClick={SaveButton}
+            type="button"
+            style={{
+              padding: "12px 30px",
+              backgroundColor: "#4caf50",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: 600,
+              transition: "background-color 0.3s, transform 0.1s",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = "#45a049";
+              e.target.style.transform = "translateY(-1px)";
+              e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "#4caf50";
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+            }}
+            onMouseDown={(e) => {
+              e.target.style.transform = "translateY(0)";
+            }}
+            onMouseUp={(e) => {
+              e.target.style.transform = "translateY(-1px)";
+            }}
+          >
+            დამახსოვრება
+          </button>
         </div>
       </div>
     </div>

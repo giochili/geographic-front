@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import StatusMessage from "../common/StatusMessage";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const EqselisPirveliEtapiWakitxva = () => {
@@ -38,13 +39,14 @@ const EqselisPirveliEtapiWakitxva = () => {
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
   const [etapiOptions, setEtapiOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Mtskheta_Windbreak_State");
+  const [accessShitName, setAccessShitName] = useState("");
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   
   // Validation states
   const [errors, setErrors] = useState({
@@ -52,6 +54,7 @@ const EqselisPirveliEtapiWakitxva = () => {
     UnicID: "",
     newExcelDestination: "",
     accessFilePath: "",
+    accessShitName:"",
     folderPath: "",
     photoStartCountingNubmer: "",
     projectNameID: "",
@@ -63,7 +66,11 @@ const EqselisPirveliEtapiWakitxva = () => {
       try {
         const apiUrl = `${API_BASE_URL}/GetProjectNamesListFirstStep`;
         const response = await axios.get(apiUrl);
-        setOptions(response.data.data);
+        // Sort options by Georgian alphabet
+        const sortedOptions = [...response.data.data].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "", 'ka', { sensitivity: 'base' })
+        );
+        setOptions(sortedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -228,10 +235,8 @@ const EqselisPirveliEtapiWakitxva = () => {
     validateField(fieldName, value);
   };
 
-  const handleSubmit = async () => {
-    setStatus(null);
-    
-    // Validate all fields before submission
+  const handleSubmitClick = () => {
+    // Validate all fields before showing confirmation modal
     if (!validateAllFields()) {
       setStatus({
         type: "error",
@@ -239,6 +244,25 @@ const EqselisPirveliEtapiWakitxva = () => {
       });
       return;
     }
+    // Show confirmation modal
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirm = async () => {
+    // Close modal
+    setShowConfirmationModal(false);
+    
+    // Proceed with submission
+    await executeSubmit();
+  };
+
+  const handleCancel = () => {
+    // Just close the modal
+    setShowConfirmationModal(false);
+  };
+
+  const executeSubmit = async () => {
+    setStatus(null);
     
     try {
       setLoading(true);
@@ -464,7 +488,7 @@ const EqselisPirveliEtapiWakitxva = () => {
         {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">
           <button
-            onClick={handleSubmit}
+            onClick={handleSubmitClick}
             disabled={IsDisabledGashvebaButton || loading}
             style={{
               backgroundColor:
@@ -481,6 +505,16 @@ const EqselisPirveliEtapiWakitxva = () => {
         </div>
         <StatusMessage status={status} />
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        message="დარწმუნებული ხართ რომ მზადააა გასაშვებად?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="დიახ"
+        cancelText="არა"
+      />
     </div>
     </div>
   );

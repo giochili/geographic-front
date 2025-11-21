@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import axios from "axios";
 import StatusMessage from "../common/StatusMessage";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const GadanomvraEtapiErti = () => {
@@ -14,6 +15,7 @@ const GadanomvraEtapiErti = () => {
   const apiUrl = `${API_BASE_URL}/RenamePhotosInFolderFirstStep`;
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   
   // Validation states
   const [errors, setErrors] = useState({
@@ -85,10 +87,8 @@ const GadanomvraEtapiErti = () => {
     validateField(fieldName, value);
   };
 
-  const handleSubmit = async () => {
-    setStatus(null);
-    
-    // Validate all fields before submission
+  const handleSubmitClick = () => {
+    // Validate all fields before showing confirmation modal
     if (!validateAllFields()) {
       setStatus({
         type: "error",
@@ -96,7 +96,24 @@ const GadanomvraEtapiErti = () => {
       });
       return;
     }
+    // Show confirmation modal
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirm = async () => {
+    // Close modal
+    setShowConfirmationModal(false);
     
+    // Proceed with submission
+    await executeSubmit();
+  };
+
+  const handleCancel = () => {
+    // Just close the modal
+    setShowConfirmationModal(false);
+  };
+
+  const executeSubmit = async () => {
     setStatus(null);
     setLoading(true);
     try {
@@ -156,20 +173,7 @@ const GadanomvraEtapiErti = () => {
             />
           </div>
 
-          {/* Checkbox */}
-          <div className="row-excel1">
-            <div className="checkbox-group">
-              <input
-                value={gadanomrilia}
-                onChange={(e) => setGadanomrilia(e.target.checked)}
-                type="checkbox"
-                id="myCheckbox"
-              />
-              <label htmlFor="myCheckbox">
-                გადანომრილია
-              </label>
-            </div>
-          </div>
+          
 
           {/* Folder Start Number */}
           <div className="row-excel1">
@@ -213,7 +217,7 @@ const GadanomvraEtapiErti = () => {
 
           {/* Buttons */}
           <div className="row-excel-buttons">
-            <button onClick={handleSubmit} disabled={loading}>
+            <button onClick={handleSubmitClick} disabled={loading}>
               {loading ? "გადამუშავება..." : "გადანომვრა"}
             </button>
             <Link className="gadavifiqre-btn" to={"/etapiErtiNavigator"}>
@@ -223,6 +227,16 @@ const GadanomvraEtapiErti = () => {
           <StatusMessage status={status} />
         </div>
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        message="დარწმუნებული ხართ რომ მზადააა გასაშვებად?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="დიახ"
+        cancelText="არა"
+      />
     </div>
   );
 };

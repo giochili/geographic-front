@@ -423,7 +423,11 @@ function VarjisFarti() {
       try {
         const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
         const response = await axios.get(apiUrl);
-        setOptions(response.data.data);
+        // Sort options by Georgian alphabet
+        const sortedOptions = [...response.data.data].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "", 'ka', { sensitivity: 'base' })
+        );
+        setOptions(sortedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -461,100 +465,227 @@ function VarjisFarti() {
     <div className="Main-Container">
       <SideBarPanel />
 
-      <div className="row-excel">
-        <h1
-          style={{
-            marginBottom: "20px",
-          }}
-        >
-          ვარჯის ფართები პროექტის სახელის მიხედვით
-        </h1>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "start",
+          width: "100%",
+          height: "100vh",
+          padding: "20px 150px",
+          backgroundColor: "lightsteelblue",
+          overflow: "hidden",
+          boxSizing: "border-box",
+        }}
+      >
+        {/* Container for side-by-side layout */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
-            width: "100%",
-            alignItems: "center",
-            marginBottom: "30px",
-          }}
-        >
-          <label>ამოირჩიეთ პროექტის დასახელება</label>
-          <select
-            style={{
-              paddingLeft: "10px",
-              fontSize: "16px",
-              height: "35px",
-              minWidth: "150px",
-            }}
-            id="projectNameIDselector"
-            title="აირჩიეთ პროექტის დასახელება"
-            onChange={(e) => handleProjectNameChange(e)}
-          >
-            <option value={0}></option>
-            {options.map((option) => (
-              <option
-                title="აირჩიეთ პროექტის დასახელება "
-                key={option.id}
-                value={option.id}
-              >
-                {option.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div
-          style={{
+            flexDirection: "row",
+            gap: "100px",
             width: "100%",
             height: "100%",
-            overflowX: "hidden",
+            alignItems: "stretch",
+            flexWrap: "wrap",
+            overflow: "hidden",
           }}
         >
-          {/* <div
-            style={{
-              height: 120,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          ></div> */}
+          {/* First Section: ვარჯის ფართები პროექტის სახელის მიხედვით */}
           <div
             style={{
-              flex: "1 1 auto",
-              padding: "1rem",
-              maxWidth: 500,
-              // marginLeft: "auto",
-              // marginRight: "auto",
-            }}
-          >
-            <Table
-              columns={state.columns}
-              data={state.data}
-              dispatch={dispatch}
-              skipReset={state.skipReset}
-            />
-          </div>
-          <div
-            style={{
-              height: 140,
+              flex: "1 1 calc(50% - 200px)",
+              minWidth: "400px",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               flexDirection: "column",
+              justifyContent: "start",
+              height: "100%",
+              backgroundColor: "lightsteelblue",
             }}
           >
-            <div>
-              <p>
-                <button onClick={handleButtonSave} type="button">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginBottom: "25px",
+                paddingBottom: "15px",
+                borderBottom: "2px solid #ecf0f1",
+                flexWrap: "wrap",
+                gap: "15px",
+                flexShrink: 0,
+              }}
+            >
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  color: "#2c3e50",
+                }}
+              >
+                ვარჯის ფართები პროექტის სახელის მიხედვით
+              </h1>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                width: "100%",
+                maxWidth: "500px",
+                marginBottom: "30px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                padding: "15px",
+                backgroundColor: "#f8f9fa",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                flexShrink: 0,
+              }}
+            >
+              <label
+                style={{
+                  fontWeight: 600,
+                  color: "#1a252f",
+                  fontSize: "16px",
+                  marginBottom: "4px",
+                }}
+              >
+                ამოირჩიეთ პროექტის დასახელება
+              </label>
+              <select
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  height: "42px",
+                  width: "100%",
+                  border: "1px solid #bdc3c7",
+                  borderRadius: "6px",
+                  backgroundColor: "#ffffff",
+                  color: "#2c3e50",
+                  cursor: "pointer",
+                  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                  fontFamily: "inherit",
+                }}
+                id="projectNameIDselector"
+                title="აირჩიეთ პროექტის დასახელება"
+                onChange={(e) => handleProjectNameChange(e)}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#3498db";
+                  e.target.style.boxShadow = "0 0 0 2px rgba(52, 152, 219, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#bdc3c7";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                <option value={0}>აირჩიეთ პროექტი...</option>
+                {options.map((option) => (
+                  <option
+                    title="აირჩიეთ პროექტის დასახელება "
+                    key={option.id}
+                    value={option.id}
+                  >
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div
+              style={{
+                width: "100%",
+                flex: "1 1 auto",
+                overflow: "auto",
+                backgroundColor: "#ffffff",
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div style={{ overflow: "auto", display: "flex", flex: "1 1 auto", justifyContent: "center" }}>
+                <div
+                  style={{
+                    flex: "1 1 auto",
+                    padding: "1rem",
+                    maxWidth: 500,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                >
+                  <Table
+                    columns={state.columns}
+                    data={state.data}
+                    dispatch={dispatch}
+                    skipReset={state.skipReset}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "20px",
+                  paddingTop: "20px",
+                  borderTop: "1px solid #ecf0f1",
+                }}
+              >
+                <button
+                  onClick={handleButtonSave}
+                  type="button"
+                  style={{
+                    padding: "12px 30px",
+                    backgroundColor: "#4caf50",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    transition: "background-color 0.3s, transform 0.1s",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                    whiteSpace: "nowrap",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = "#45a049";
+                    e.target.style.transform = "translateY(-1px)";
+                    e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "#4caf50";
+                    e.target.style.transform = "translateY(0)";
+                    e.target.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+                  }}
+                  onMouseDown={(e) => {
+                    e.target.style.transform = "translateY(0)";
+                  }}
+                  onMouseUp={(e) => {
+                    e.target.style.transform = "translateY(-1px)";
+                  }}
+                >
                   შენახვა
                 </button>
-              </p>
+              </div>
             </div>
           </div>
+
+          {/* Second Section: სახეობების ცხრილი */}
+          <div
+            style={{
+              flex: "1 1 calc(50% - 700px)",
+              minWidth: "200px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "start",
+              height: "100%",
+              backgroundColor: "lightsteelblue",
+            }}
+          >
+            <SaxeobaTable />
+          </div>
         </div>
-      </div>
-      <div className="row-excel">
-        <SaxeobaTable>{/* Table content goes here */}</SaxeobaTable>
       </div>
     </div>
   );

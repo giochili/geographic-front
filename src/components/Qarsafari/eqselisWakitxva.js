@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import StatusMessage from "../common/StatusMessage";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const EqselisWakitxva = () => {
@@ -38,13 +39,14 @@ const EqselisWakitxva = () => {
   const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
   const [options, setOptions] = useState([]);
   const [etapiOptions, setEtapiOptions] = useState([]);
-  const [accessShitName, setAccessShitName] = useState("Mtskheta_Windbreak_State");
+  const [accessShitName, setAccessShitName] = useState("");
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   
   // Validation states
   const [errors, setErrors] = useState({
@@ -52,6 +54,7 @@ const EqselisWakitxva = () => {
     UnicID: "",
     newExcelDestination: "",
     accessFilePath: "",
+    accessShitName: "",
     folderPath: "",
     photoStartCountingNubmer: "",
     projectNameID: "",
@@ -64,7 +67,11 @@ const EqselisWakitxva = () => {
       try {
         const apiUrl = `${API_BASE_URL}/GetProjectNamesList`;
         const response = await axios.get(apiUrl);
-        setOptions(response.data.data);
+        // Sort options by Georgian alphabet
+        const sortedOptions = [...response.data.data].sort((a, b) => 
+          (a.name || "").localeCompare(b.name || "", 'ka', { sensitivity: 'base' })
+        );
+        setOptions(sortedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -115,19 +122,15 @@ const EqselisWakitxva = () => {
         break;
       
       case "UnicID":
-        if (gadanomriliaUNIQID) {
-          if (!value || value === "" || value === 0) {
-            error = "UNIC-ID აუცილებელია როცა 'გადანომრილია UNIQID' მონიშნულია";
-          } else if (isNaN(value) || Number(value) <= 0) {
-            error = "UNIC-ID უნდა იყოს დადებითი რიცხვი";
-          }
-        } else {
+        // Only validate if checkbox is NOT checked (field is enabled)
+        if (!gadanomriliaUNIQID) {
           if (value && value !== "" && value !== 0) {
             if (isNaN(value) || Number(value) <= 0) {
               error = "UNIC-ID უნდა იყოს დადებითი რიცხვი";
             }
           }
         }
+        // If checkbox is checked, no validation needed (field is disabled)
         break;
       
       case "newExcelDestination":
@@ -153,19 +156,15 @@ const EqselisWakitxva = () => {
         break;
       
       case "photoStartCountingNubmer":
-        if (gadanomriliaFotoebi) {
-          if (!value || value === "" || value === 0) {
-            error = "ფოტოების დაწყების ნომერი აუცილებელია როცა 'გადანომრილია ფოტოები' მონიშნულია";
-          } else if (isNaN(value) || Number(value) <= 0) {
-            error = "ნომერი უნდა იყოს დადებითი რიცხვი";
-          }
-        } else {
+        // Only validate if checkbox is NOT checked (field is enabled)
+        if (!gadanomriliaFotoebi) {
           if (value && value !== "" && value !== 0) {
             if (isNaN(value) || Number(value) <= 0) {
               error = "ნომერი უნდა იყოს დადებითი რიცხვი";
             }
           }
         }
+        // If checkbox is checked, no validation needed (field is disabled)
         break;
       
       case "projectNameID":
@@ -226,10 +225,8 @@ const EqselisWakitxva = () => {
     validateField(fieldName, value);
   };
 
-  const handleSubmit = async () => {
-    setStatus(null);
-    
-    // Validate all fields before submission
+  const handleSubmitClick = () => {
+    // Validate all fields before showing confirmation modal
     if (!validateAllFields()) {
       setStatus({
         type: "error",
@@ -237,6 +234,25 @@ const EqselisWakitxva = () => {
       });
       return;
     }
+    // Show confirmation modal
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirm = async () => {
+    // Close modal
+    setShowConfirmationModal(false);
+    
+    // Proceed with submission
+    await executeSubmit();
+  };
+
+  const handleCancel = () => {
+    // Just close the modal
+    setShowConfirmationModal(false);
+  };
+
+  const executeSubmit = async () => {
+    setStatus(null);
     
     try {
       setLoading(true);
@@ -254,7 +270,7 @@ const EqselisWakitxva = () => {
         FolderPath: folderPath,
         PhotoStartNumber: photoStartCountingNubmer,
         GadanomriliaUNIQID: gadanomriliaUNIQID,
-        Gadanomrilia: gadanomrilia,
+        Gadanomrilia: gadanomriliaUNIQID,
         GadanomriliaFotoebi: gadanomriliaFotoebi,
       };
       const response = await axios.post(apiUrl, payload);
@@ -320,6 +336,34 @@ const EqselisWakitxva = () => {
             </div>
           </div>
 
+          
+          
+          {/* UNIC-ID Input */}
+          <div className="row-excel1">
+            <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
+            <input
+              placeholder={gadanomriliaUNIQID ? "გადანომრილია - არ არის საჭირო" : "შეიყვანეთ რიცხვი"}
+              value={UnicID}
+              type="number"
+              min="1"
+              disabled={gadanomriliaUNIQID}
+              onChange={(e) => {
+                if (!gadanomriliaUNIQID) {
+                  setUnicID(e.target.value);
+                  if (touched.UnicID) {
+                    validateField("UnicID", e.target.value);
+                  }
+                }
+              }}
+              onBlur={(e) => {
+                if (!gadanomriliaUNIQID) {
+                  handleBlur("UnicID", e.target.value);
+                }
+              }}
+              className={errors.UnicID && touched.UnicID && !gadanomriliaUNIQID ? "input-error" : ""}
+              title={gadanomriliaUNIQID ? "გადანომრილია UNIQID მონიშნულია - ველი გამორთულია" : "გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."}
+            />
+          </div>
           <div className="row-excel1">
             <div className="checkbox-group">
               <input
@@ -337,26 +381,6 @@ const EqselisWakitxva = () => {
                 გადანომრილია UNIQID
               </label>
             </div>
-          </div>
-          
-          {/* UNIC-ID Input */}
-          <div className="row-excel1">
-            <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
-            <input
-              placeholder="შეიყვანეთ რიცხვი"
-              value={UnicID}
-              type="number"
-              min="1"
-              onChange={(e) => {
-                setUnicID(e.target.value);
-                if (touched.UnicID) {
-                  validateField("UnicID", e.target.value);
-                }
-              }}
-              onBlur={(e) => handleBlur("UnicID", e.target.value)}
-              className={errors.UnicID && touched.UnicID ? "input-error" : ""}
-              title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."
-            />
           </div>
 
           {/* Excel Destination - Full Width */}
@@ -455,40 +479,30 @@ const EqselisWakitxva = () => {
                 type="text"
               />
             </div>
-            <div className="row">
-              <div className="checkbox-group">
-                <input
-                  value={gadanomrilia}
-                  onChange={(e) => {
-                    setGadanomrilia(e.target.checked);
-                    if (touched.folderPath) {
-                      validateField("folderPath", folderPath);
-                    }
-                  }}
-                  type="checkbox"
-                  id="renamedCheckbox"
-                />
-                <label htmlFor="renamedCheckbox">
-                  გადანომრილია
-                </label>
-              </div>
-            </div>
+            
             <div className="row">
               <label>საიდან დავიწყოთ ფოტოების გადანომვრა</label>
               <input
                 value={photoStartCountingNubmer}
                 type="number"
                 min="1"
-                placeholder="შეიყვანეთ რიცხვი"
+                disabled={gadanomriliaFotoebi}
+                placeholder={gadanomriliaFotoebi ? "გადანომრილია - არ არის საჭირო" : "შეიყვანეთ რიცხვი"}
                 onChange={(e) => {
-                  setPhotoStartCountingNumber(e.target.value);
-                  if (touched.photoStartCountingNubmer) {
-                    validateField("photoStartCountingNubmer", e.target.value);
+                  if (!gadanomriliaFotoebi) {
+                    setPhotoStartCountingNumber(e.target.value);
+                    if (touched.photoStartCountingNubmer) {
+                      validateField("photoStartCountingNubmer", e.target.value);
+                    }
                   }
                 }}
-                onBlur={(e) => handleBlur("photoStartCountingNubmer", e.target.value)}
-                className={errors.photoStartCountingNubmer && touched.photoStartCountingNubmer ? "input-error" : ""}
-                title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოტოების გადანომვრა."
+                onBlur={(e) => {
+                  if (!gadanomriliaFotoebi) {
+                    handleBlur("photoStartCountingNubmer", e.target.value);
+                  }
+                }}
+                className={errors.photoStartCountingNubmer && touched.photoStartCountingNubmer && !gadanomriliaFotoebi ? "input-error" : ""}
+                title={gadanomriliaFotoebi ? "გადანომრილია ფოტოები მონიშნულია - ველი გამორთულია" : "გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოტოების გადანომვრა."}
               />
             </div>
           </div>
@@ -535,7 +549,7 @@ const EqselisWakitxva = () => {
         {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">
           <button
-            onClick={handleSubmit}
+            onClick={handleSubmitClick}
             disabled={IsDisabledGashvebaButton || loading}
             style={{
               backgroundColor:
@@ -552,6 +566,16 @@ const EqselisWakitxva = () => {
         </div>
         <StatusMessage status={status} />
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        message="დარწმუნებული ხართ რომ მზადააა გასაშვებად?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="დიახ"
+        cancelText="არა"
+      />
     </div>
     </div>
   );

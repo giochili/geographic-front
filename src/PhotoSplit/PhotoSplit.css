@@ -60,63 +60,12 @@
 
 .row-excel1.full-width {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-}
-
-.row-excel1.full-width > .row {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.row-excel1.full-width > .row label {
-  font-weight: 600;
-  color: #1a252f;
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-
-.row-excel1.full-width > .row input[type="text"],
-.row-excel1.full-width > .row input[type="number"] {
-  padding: 8px 12px;
-  border: 1px solid #bdc3c7;
+  padding: 15px;
+  background-color: #f8f9fa;
   border-radius: 5px;
-  font-size: 14px;
-  width: 100%;
-  color: #2c3e50;
-  background-color: #ffffff;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.row-excel1.full-width > .row input[type="text"].input-error,
-.row-excel1.full-width > .row input[type="number"].input-error {
-  border: 2px solid #d32f2f !important;
-  background-color: #ffebee !important;
-}
-
-.row-excel1.full-width > .row input[type="text"].input-error:focus,
-.row-excel1.full-width > .row input[type="number"].input-error:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2) !important;
-  border-color: #d32f2f !important;
-}
-
-.row-excel1.full-width > .row input[type="text"]::placeholder,
-.row-excel1.full-width > .row input[type="number"]::placeholder {
-  color: #7f8c8d;
-  opacity: 0.8;
-}
-
-.row-excel1.full-width > .row input[type="text"]:focus,
-.row-excel1.full-width > .row input[type="number"]:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 .row-excel1 label {
@@ -155,9 +104,7 @@
 
 /* Disabled input styles */
 .row-excel1 input[type="text"]:disabled,
-.row-excel1 input[type="number"]:disabled,
-.row-excel1.full-width > .row input[type="text"]:disabled,
-.row-excel1.full-width > .row input[type="number"]:disabled {
+.row-excel1 input[type="number"]:disabled {
   background-color: #e8e8e8 !important;
   color: #6c757d !important;
   border-color: #ced4da !important;
@@ -167,9 +114,7 @@
 }
 
 .row-excel1 input[type="text"]:disabled::placeholder,
-.row-excel1 input[type="number"]:disabled::placeholder,
-.row-excel1.full-width > .row input[type="text"]:disabled::placeholder,
-.row-excel1.full-width > .row input[type="number"]:disabled::placeholder {
+.row-excel1 input[type="number"]:disabled::placeholder {
   color: #6c757d !important;
   opacity: 0.8;
 }
@@ -200,40 +145,15 @@
   border-top: 2px solid #ecf0f1;
 }
 
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.checkbox-group label {
-  font-size: 14px;
-  color: #1a252f;
-  font-weight: 500;
-  cursor: pointer;
-  margin: 0;
-}
-
 /* Validation styles */
 .input-error,
-.row-excel1 input.input-error,
-.row-excel1.full-width > .row input.input-error {
+.row-excel1 input.input-error {
   border: 2px solid #d32f2f !important;
   background-color: #ffebee !important;
 }
 
 .input-error:focus,
-.row-excel1 input.input-error:focus,
-.row-excel1.full-width > .row input.input-error:focus {
+.row-excel1 input.input-error:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2) !important;
   border-color: #d32f2f !important;
@@ -263,7 +183,6 @@
   color: #2c3e50;
   background-color: white;
 }
-
 
 button {
   padding: 10px 24px;
@@ -310,13 +229,18 @@ button:disabled {
   padding: 15px;
 }
 
+/* Error message styling */
+.row-excel1 span {
+  display: block;
+  margin-top: 4px;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .obtainer {
     gap: 12px;
     padding: 15px;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -344,8 +268,6 @@ button:disabled {
 
   .row-excel1.full-width {
     grid-column: 1;
-    grid-template-columns: 1fr;
-    gap: 12px;
     padding: 12px;
   }
 
@@ -399,21 +321,6 @@ button:disabled {
 
   .row-excel1.full-width {
     padding: 10px;
-    gap: 10px;
-  }
-
-  .row-excel1.full-width > .row input[type="text"],
-  .row-excel1.full-width > .row input[type="number"] {
-    padding: 7px 10px;
-    font-size: 13px;
-  }
-
-  .checkbox-group {
-    padding: 5px 8px;
-  }
-
-  .checkbox-group label {
-    font-size: 13px;
   }
 
   button,
@@ -422,3 +329,4 @@ button:disabled {
     padding: 9px 18px;
   }
 }
+
