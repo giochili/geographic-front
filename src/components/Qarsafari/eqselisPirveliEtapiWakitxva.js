@@ -4,20 +4,18 @@ import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import StatusMessage from "../common/StatusMessage";
-import PathInputActions from "../common/PathInputActions";
-import { sanitizeWindowsPath } from "../../utils/pathUtils";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
 const EqselisPirveliEtapiWakitxva = () => {
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  const [UnicID, setUnicID] = useState(0);
+  const [UnicID, setUnicID] = useState(1);
   const [folderPath, setFolderPath] = useState("");
   const [gadanomriliaUNIQID, setGadanomriliaUNIQID] = useState(false);
   const [gadanomrilia, setGadanomrilia] = useState(false);
   const [gadanomriliaFotoebi, setGadanomriliaFotoebi] = useState(false);
 
-  const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState();
+  const [photoStartCountingNubmer, setPhotoStartCountingNumber] = useState(1);
   // const excelFilePath = async (e) => {
   //   try {
   //     const file = e.target.files[0];
@@ -47,6 +45,19 @@ const EqselisPirveliEtapiWakitxva = () => {
     useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  
+  // Validation states
+  const [errors, setErrors] = useState({
+    ExcelPath: "",
+    UnicID: "",
+    newExcelDestination: "",
+    accessFilePath: "",
+    folderPath: "",
+    photoStartCountingNubmer: "",
+    projectNameID: "",
+    accessShitName: "",
+  });
+  const [touched, setTouched] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,20 +84,162 @@ const EqselisPirveliEtapiWakitxva = () => {
 
     fetchData();
   }, []);
-  const pasteFromClipboard = async (setter) => {
-    try {
-      const text = await navigator.clipboard.readText();
-      setter(sanitizeWindowsPath(text));
-    } catch {
-      setStatus({
-        type: "error",
-        text: "კლიპბორდიდან ჩასმა ვერ მოხერხდა. სცადეთ Ctrl + V.",
-      });
+  
+  // Re-validate fields when checkbox states change
+  useEffect(() => {
+    if (touched.UnicID) {
+      validateField("UnicID", UnicID);
     }
+  }, [gadanomriliaUNIQID]);
+  
+  useEffect(() => {
+    if (touched.folderPath) {
+      validateField("folderPath", folderPath);
+    }
+    if (touched.photoStartCountingNubmer) {
+      validateField("photoStartCountingNubmer", photoStartCountingNubmer);
+    }
+  }, [gadanomriliaFotoebi, gadanomrilia]);
+
+  const validateField = (fieldName, value) => {
+    let error = "";
+    
+    switch (fieldName) {
+      case "ExcelPath":
+        if (!value || value.trim() === "") {
+          error = "ექსელის ფაილის მისამართი აუცილებელია";
+        } else if (!value.match(/\.(xlsx|xls)$/i)) {
+          error = "ფაილი უნდა იყოს .xlsx  ფორმატის";
+        }
+        break;
+      
+      case "UnicID":
+        if (gadanomriliaUNIQID) {
+          if (!value || value === "" || value === 0) {
+            error = "UNIC-ID აუცილებელია როცა 'გადანომრილია UNIQID' მონიშნულია";
+          } else if (isNaN(value) || Number(value) <= 0) {
+            error = "UNIC-ID უნდა იყოს დადებითი რიცხვი";
+          }
+        } else {
+          // If checkbox is not checked but value is provided, it must be > 0
+          if (value && value !== "" && value !== 0) {
+            if (isNaN(value) || Number(value) <= 0) {
+              error = "UNIC-ID უნდა იყოს დადებითი რიცხვი";
+            }
+          }
+        }
+        break;
+      
+      case "newExcelDestination":
+        if (!value || value.trim() === "") {
+          error = "ახალი ექსელის მისამართი აუცილებელია";
+        }
+        break;
+      
+      case "accessFilePath":
+        if (!value || value.trim() === "") {
+          error = "Access ფაილის მისამართი აუცილებელია";
+        } else if (!value.match(/\.(mdb|accdb)$/i)) {
+          error = "ფაილი უნდა იყოს .mdb ან .accdb ფორმატის";
+        }
+        break;
+      
+      case "folderPath":
+        if (gadanomrilia || gadanomriliaFotoebi) {
+          if (!value || value.trim() === "") {
+            error = "ფოლდერის მისამართი აუცილებელია როცა გადანომვრა მონიშნულია";
+          }
+        }
+        break;
+      
+      case "photoStartCountingNubmer":
+        if (gadanomriliaFotoebi) {
+          if (!value || value === "" || value === 0) {
+            error = "ფოტოების დაწყების ნომერი აუცილებელია როცა 'გადანომრილია ფოტოები' მონიშნულია";
+          } else if (isNaN(value) || Number(value) <= 0) {
+            error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+          }
+        } else {
+          // If checkbox is not checked but value is provided, it must be > 0
+          if (value && value !== "" && value !== 0) {
+            if (isNaN(value) || Number(value) <= 0) {
+              error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+            }
+          }
+        }
+        break;
+      
+      case "projectNameID":
+        if (!value || value === 0 || value === "0") {
+          error = "მუნიციპალიტეტი აუცილებელია";
+        }
+        break;
+      
+      case "accessShitName":
+        if (!value || value.trim() === "") {
+          error = "Access შიტის სახელი აუცილებელია";
+        }
+        break;
+      
+      default:
+        break;
+    }
+    
+    setErrors((prev) => ({ ...prev, [fieldName]: error }));
+    return error === "";
+  };
+
+  const validateAllFields = () => {
+    const fieldsToValidate = [
+      { name: "ExcelPath", value: ExcelPath },
+      { name: "UnicID", value: UnicID },
+      { name: "newExcelDestination", value: newExcelDestination },
+      { name: "accessFilePath", value: accessFilePath },
+      { name: "folderPath", value: folderPath },
+      { name: "photoStartCountingNubmer", value: photoStartCountingNubmer },
+      { name: "projectNameID", value: projectNameID },
+      { name: "accessShitName", value: accessShitName },
+    ];
+
+    let isValid = true;
+    fieldsToValidate.forEach(({ name, value }) => {
+      if (!validateField(name, value)) {
+        isValid = false;
+      }
+    });
+
+    // Mark all fields as touched
+    setTouched({
+      ExcelPath: true,
+      UnicID: true,
+      newExcelDestination: true,
+      accessFilePath: true,
+      folderPath: true,
+      photoStartCountingNubmer: true,
+      projectNameID: true,
+      accessShitName: true,
+    });
+
+    return isValid;
+  };
+
+  const handleBlur = (fieldName, value) => {
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName, value);
   };
 
   const handleSubmit = async () => {
     setStatus(null);
+    
+    // Validate all fields before submission
+    if (!validateAllFields()) {
+      setStatus({
+        type: "error",
+        text: "გთხოვთ შეავსოთ ყველა აუცილებელი ველი სწორად.",
+      });
+      return;
+    }
+    
     try {
       setLoading(true);
       setIsDisabledGashvebaButton(true);
@@ -127,190 +280,187 @@ const EqselisPirveliEtapiWakitxva = () => {
 
   return (
     <div>
-
-    <header className="header">
+      <header className="header">
         პირველი ეტაპი I
       </header>
-    <div className="Main-for-eqselisWakitxva">
-      <div className="obtainer">
-        <div className="row-excel1">
-          <Link className="back-button" to="/etapiErtiNavigator">
-            &#8592; უკან
-          </Link>
-          <label>ამოირჩიეთ ექსელის ფაილი</label>
-          <input
-            type="text"
-            value={ExcelPath}
-            onChange={(e) => setExcelPath(e.target.value)}
-            placeholder="შეიყვანეთ .xlsx/.xls ფაილის სრული მისამართი სერვერზე"
-            title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
-          />
-          <PathInputActions
-            onPaste={() => pasteFromClipboard(setExcelPath)}
-            onClear={() => setExcelPath("")}
-          />
-        </div>
-        <div className="row-excel1">
-          <div>
+      <Link className="back-button" to="/etapiErtiNavigator">
+        &#8592; უკან
+      </Link>
+      <div className="Main-for-eqselisWakitxva">
+        <div className="obtainer">
+          {/* Excel Path - Full Width */}
+          <div className="row-excel1 full-width">
+            <label>ჩასვით ექსელის ფაილი</label>
             <input
-              value={calcVarjisFarti}
-              onChange={(e) => setCalcVarjisFarti(e.target.checked)}
-              type="checkbox"
-              id="calcVarjisFartiCheckbox"
+              type="text"
+              value={ExcelPath}
+              onChange={(e) => {
+                setExcelPath(e.target.value);
+                if (touched.ExcelPath) {
+                  validateField("ExcelPath", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
+              className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
+              placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი სერვერზე"
+              title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
             />
-
-            <label htmlFor="calcVarjisFartiCheckbox" style={{ fontSize: "12px" }}>
-              დავთვალოთ ვარჯის ფართები ?
-            </label>
           </div>
-        </div>
-        {/* ფოტოების გადანომვრა ექსელის ოლდ უნიქკიდებით */}
-        <div>
-          <input
-            value={gadanomriliaUNIQID}
-            onChange={(e) => setGadanomriliaUNIQID(e.target.checked)}
-            type="checkbox"
-            id="uniqidRenamedCheckbox"
-          />
 
-          <label htmlFor="uniqidRenamedCheckbox" style={{ fontSize: "12px" }}>
-            გადანომრილია UNIQID
-          </label>
-        </div>
-        
-        <div className="row-excel1">
-          <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
-          <input
-            placeholder="შეიყვანეთ რიცხვი"
-            value={UnicID}
-            type="number"
-            onChange={(e) => setUnicID(e.target.value)}
-            title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."
-          />
-        </div>
-        <div className="row-excel1">
-          <label>
-            შეიყანეთ მისამართი სადაც უნდა შეიქმნას
-            <br /> ექსელის ახალი ფაილი
-          </label>
-          <input
-            value={newExcelDestination}
-            type="text"
-            placeholder="შეავსეთ მისამართი"
-            onChange={(e) => setNewExcelDestination(e.target.value)}
-            title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
-          />
-          <PathInputActions
-            onPaste={() => pasteFromClipboard(setNewExcelDestination)}
-            onClear={() => setNewExcelDestination("")}
-          />
-        </div>
-
-        <div className="row-excel1">
-          <label>ამოირჩიეთ access ფაილი</label>
-          <input
-            type="text"
-            value={accessShitName}
-            onChange={(e) => setAccessShitName(e.target.value)}
-            placeholder="შეიყვანეთ შიტის სახელი"
-          />
-          <input
-            type="text"
-            value={accessFilePath}
-            onChange={(e) => setAccessFilePath(e.target.value)}
-            placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
-            title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
-          />
-          <PathInputActions
-            onPaste={() => pasteFromClipboard(setAccessFilePath)}
-            onClear={() => setAccessFilePath("")}
-          />
-        </div>
-
-        {/* ფოტოების გადანომვრა ექსელის ოლდ უნიქკიდებით */}
-        <div>
-          <input
-            value={gadanomriliaFotoebi}
-            onChange={(e) => setGadanomriliaFotoebi(e.target.checked)}
-            type="checkbox"
-            id="photosRenamedCheckbox"
-          />
-
-          <label htmlFor="photosRenamedCheckbox" style={{ fontSize: "12px" }}>
-            გადანომრილია ფოტოები
-          </label>
-        </div>
-
-        {/* Gadanomvra Component */}
-        <div className="main-container">
-          <div className="row">
-            <div className="flex">
-              <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
+          {/* Checkboxes Row */}
+          <div className="row-excel1">
+            <div className="checkbox-group">
               <input
-                onChange={(e) => setFolderPath(e.target.value)}
-                value={folderPath}
-                title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
-                type="text"
+                value={calcVarjisFarti}
+                onChange={(e) => setCalcVarjisFarti(e.target.checked)}
+                type="checkbox"
+                id="calcVarjisFartiCheckbox"
               />
-              <PathInputActions
-                onPaste={() => pasteFromClipboard(setFolderPath)}
-                onClear={() => setFolderPath("")}
-              />
+              <label htmlFor="calcVarjisFartiCheckbox">
+                დავთვალოთ ვარჯის ფართები ?
+              </label>
             </div>
-            <div className="flex">
-              <div>
-                <input
-                  value={gadanomrilia}
-                  onChange={(e) => setGadanomrilia(e.target.checked)}
-                  type="checkbox"
-                  id="renamedCheckbox"
-                />
+          </div>
 
-                <label htmlFor="renamedCheckbox" style={{ fontSize: "12px" }}>
-                  გადანომრილია
-                </label>
+          
+          
+          
+
+          {/* Excel Destination - Full Width */}
+          <div className="row-excel1 full-width">
+            <label>შეიყანეთ მისამართი სადაც უნდა შეიქმნას ექსელის ახალი ფაილი</label>
+            <input
+              value={newExcelDestination}
+              type="text"
+              placeholder="შეავსეთ მისამართი"
+              onChange={(e) => {
+                setNewExcelDestination(e.target.value);
+                if (touched.newExcelDestination) {
+                  validateField("newExcelDestination", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("newExcelDestination", e.target.value)}
+              className={errors.newExcelDestination && touched.newExcelDestination ? "input-error" : ""}
+              title="გთხოვთ შეავსოთ მისამართი რომ გადათვლილი ექსელის ფოლდერი ჩაკოპირდეს."
+            />
+          </div>
+
+          {/* Access File - Two Columns */}
+          <div className="row-excel1">
+            <label>Access შიტის სახელი</label>
+            <input
+              type="text"
+              value={accessShitName}
+              onChange={(e) => {
+                setAccessShitName(e.target.value);
+                if (touched.accessShitName) {
+                  validateField("accessShitName", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("accessShitName", e.target.value)}
+              className={errors.accessShitName && touched.accessShitName ? "input-error" : ""}
+              placeholder="შეიყვანეთ შიტის სახელი"
+            />
+          </div>
+
+          <div className="row-excel1">
+            <label>Access ფაილის მისამართი</label>
+            <input
+              type="text"
+              value={accessFilePath}
+              onChange={(e) => {
+                setAccessFilePath(e.target.value);
+                if (touched.accessFilePath) {
+                  validateField("accessFilePath", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("accessFilePath", e.target.value)}
+              className={errors.accessFilePath && touched.accessFilePath ? "input-error" : ""}
+              placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
+              title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
+            />
+          </div>
+
+          
+
+          {/* Gadanomvra Section - Full Width */}
+          <div className="row-excel1 full-width">
+              <div className="row">
+                <label>შეიყვანეთ გადასანომრი ფაილის მისამართი</label>
+                <input
+                  onChange={(e) => {
+                    setFolderPath(e.target.value);
+                    if (touched.folderPath) {
+                      validateField("folderPath", e.target.value);
+                    }
+                  }}
+                  onBlur={(e) => handleBlur("folderPath", e.target.value)}
+                  value={folderPath}
+                  className={errors.folderPath && touched.folderPath ? "input-error" : ""}
+                  title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
+                  type="text"
+                />
+              </div>
+              
+              <div className="row">
+                <label>საიდან დავიწყოთ ფოტოების გადანომვრა</label>
+                <input
+                  value={photoStartCountingNubmer}
+                  type="number"
+                  min="1"
+                  placeholder="შეიყვანეთ რიცხვი"
+                  onChange={(e) => {
+                    setPhotoStartCountingNumber(e.target.value);
+                    if (touched.photoStartCountingNubmer) {
+                      validateField("photoStartCountingNubmer", e.target.value);
+                    }
+                  }}
+                  onBlur={(e) => handleBlur("photoStartCountingNubmer", e.target.value)}
+                  className={errors.photoStartCountingNubmer && touched.photoStartCountingNubmer ? "input-error" : ""}
+                  title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოტოების გადანომვრა."
+                />
               </div>
             </div>
-          </div>
-          {/* Third Row: Paragraph and Input */}
-          <div className="row">
-            <p>საიდან დავიწყოთ ფოტოების გადანომვრა </p>
-            <input
-              value={photoStartCountingNubmer}
-              type="number"
-              placeholder="შეიყვანეთ რიცხვი"
-              onChange={(e) => setPhotoStartCountingNumber(e.target.value)}
-              title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოტოების გადანომვრა."
-            />
-          </div>
-        </div>
 
-        <div className="row-excel1">
-          <label>ამოირჩიეთ მუნიციპალიტეტი</label>
-          <select
-            title="აირჩიეთ მუნიციპალიტეტი"
-            onChange={(e) => setProjectNameID(e.target.value)}
-          >
-            <option value={0}></option>
-            {options.map((option) => (
-              <option
-                title="აირჩიეთ მუნიციპალიტეტი "
-                key={option.id}
-                value={option.id}
-              >
-                {option.name}
-              </option>
-            ))}
-          </select>
-          <select value={83} disabled>
-            <option value={0}></option>
-            {etapiOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                {option.name}
+          {/* Municipality and Etapi - Two Columns */}
+          <div className="row-excel1">
+            <label>ამოირჩიეთ მუნიციპალიტეტი</label>
+            <select
+              title="აირჩიეთ მუნიციპალიტეტი"
+              value={projectNameID}
+              onChange={(e) => {
+                setProjectNameID(e.target.value);
+                if (touched.projectNameID) {
+                  validateField("projectNameID", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("projectNameID", e.target.value)}
+              className={errors.projectNameID && touched.projectNameID ? "select-error" : ""}
+            >
+              <option value={0}></option>
+              {options.map((option) => (
+                <option
+                  title="აირჩიეთ მუნიციპალიტეტი "
+                  key={option.id}
+                  value={option.id}
+                >
+                  {option.name}
                 </option>
-            ))}
+              ))}
             </select>
-        </div>
+          </div>
+
+          <div className="row-excel1">
+            <label>ეტაპი</label>
+            <select value={83} disabled>
+              <option value={0}></option>
+              {etapiOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
         {loading && <div className="spinner"></div>}
         <div className="row-excel-buttons">
           <button
