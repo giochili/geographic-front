@@ -338,7 +338,7 @@ const EqselisWakitxva = () => {
 
           
           
-          {/* UNIC-ID Input */}
+          {/* UNIC-ID Input
           <div className="row-excel1">
             <label>შეიყვანეთ UNIC-ID საიდანაც უნდა დაიწყოს გადანომვრა</label>
             <input
@@ -363,8 +363,8 @@ const EqselisWakitxva = () => {
               className={errors.UnicID && touched.UnicID && !gadanomriliaUNIQID ? "input-error" : ""}
               title={gadanomriliaUNIQID ? "გადანომრილია UNIQID მონიშნულია - ველი გამორთულია" : "გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს გადანომვრა UNIQ-ID სთვის."}
             />
-          </div>
-          <div className="row-excel1">
+          </div> */}
+          {/* <div className="row-excel1">
             <div className="checkbox-group">
               <input
                 value={gadanomriliaUNIQID}
@@ -381,7 +381,7 @@ const EqselisWakitxva = () => {
                 გადანომრილია UNIQID
               </label>
             </div>
-          </div>
+          </div> */}
 
           {/* Excel Destination - Full Width */}
           <div className="row-excel1 full-width">

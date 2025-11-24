@@ -42,6 +42,7 @@ const EqselisPirveliEtapiWakitxva = () => {
   const [accessShitName, setAccessShitName] = useState("");
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
+  const [folderStartCountingNumber, setFolderStartCountingNumber] = useState(1);
   const [IsDisabledGashvebaButton, setIsDisabledGashvebaButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,7 @@ const EqselisPirveliEtapiWakitxva = () => {
     accessFilePath: "",
     accessShitName:"",
     folderPath: "",
+    folderStartCountingNumber: "",
     photoStartCountingNubmer: "",
     projectNameID: "",
     accessShitName: "",
@@ -106,7 +108,10 @@ const EqselisPirveliEtapiWakitxva = () => {
     if (touched.photoStartCountingNubmer) {
       validateField("photoStartCountingNubmer", photoStartCountingNubmer);
     }
-  }, [gadanomriliaFotoebi, gadanomrilia]);
+    if (touched.folderStartCountingNumber) {
+      validateField("folderStartCountingNumber", folderStartCountingNumber);
+    }
+  }, [gadanomriliaFotoebi, gadanomrilia,folderStartCountingNumber]);
 
   const validateField = (fieldName, value) => {
     let error = "";
@@ -175,6 +180,23 @@ const EqselisPirveliEtapiWakitxva = () => {
           }
         }
         break;
+
+        case "folderStartCountingNumber":
+        if (gadanomriliaFotoebi) {
+          if (!value || value === "" || value === 0) {
+            error = "ფოლდერების დაწყების ნომერი აუცილებელია როცა 'გადანომრილია ფოტოები' მონიშნულია";
+          } else if (isNaN(value) || Number(value) <= 0) {
+            error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+          }
+        } else {
+          // If checkbox is not checked but value is provided, it must be > 0
+          if (value && value !== "" && value !== 0) {
+            if (isNaN(value) || Number(value) <= 0) {
+              error = "ნომერი უნდა იყოს დადებითი რიცხვი";
+            }
+          }
+        }
+        break;
       
       case "projectNameID":
         if (!value || value === 0 || value === "0") {
@@ -203,6 +225,7 @@ const EqselisPirveliEtapiWakitxva = () => {
       { name: "newExcelDestination", value: newExcelDestination },
       { name: "accessFilePath", value: accessFilePath },
       { name: "folderPath", value: folderPath },
+      { name: "folderStartCountingNumber" , value: folderStartCountingNumber},
       { name: "photoStartCountingNubmer", value: photoStartCountingNubmer },
       { name: "projectNameID", value: projectNameID },
       { name: "accessShitName", value: accessShitName },
@@ -222,6 +245,7 @@ const EqselisPirveliEtapiWakitxva = () => {
       newExcelDestination: true,
       accessFilePath: true,
       folderPath: true,
+      folderStartCountingNumber:true,
       photoStartCountingNubmer: true,
       projectNameID: true,
       accessShitName: true,
@@ -272,6 +296,7 @@ const EqselisPirveliEtapiWakitxva = () => {
         UnicIDStartNumber: UnicID,
         ExcelPath: ExcelPath,
         ExcelDestinationPath: newExcelDestination,
+        unicIDStartNumber: folderStartCountingNumber,
         AccessFilePath: accessFilePath,
         ProjectNameID: projectNameID,
         CalcVarjisFartiCheckbox: calcVarjisFarti,
@@ -423,6 +448,24 @@ const EqselisPirveliEtapiWakitxva = () => {
                   className={errors.folderPath && touched.folderPath ? "input-error" : ""}
                   title="მიუთითეთ ფოლდერის მისამართი სადაც ფოტოები/ფოლდერებია გადასანომრი"
                   type="text"
+                />
+              </div>
+              <div className="row">
+                <label>საიდან დავიწყოთ ფოლდერების გადანომვრა</label>
+                <input
+                  value={folderStartCountingNumber}
+                  type="number"
+                  min="1"
+                  placeholder="შეიყვანეთ რიცხვი"
+                  onChange={(e) => {
+                    setFolderStartCountingNumber(e.target.value);
+                    if (touched.folderStartCountingNumber) {
+                      validateField("folderStartCountingNumber", e.target.value);
+                    }
+                  }}
+                  onBlur={(e) => handleBlur("folderStartCountingNumber", e.target.value)}
+                  className={errors.folderStartCountingNumber && touched.folderStartCountingNumber ? "input-error" : ""}
+                  title="გთხოვთ შეიყვანოთ რიცხვი თუ საიდან დაიწყოს ფოლდერების გადანომვრა."
                 />
               </div>
               
