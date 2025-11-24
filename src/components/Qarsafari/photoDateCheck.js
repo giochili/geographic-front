@@ -1,11 +1,10 @@
-
-import "../../Styles/Qarsafari/PhotoDateCheck.css";
+import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import React from "react";
 import StatusMessage from "../common/StatusMessage";
-import PathInputActions from "../common/PathInputActions";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { sanitizeWindowsPath } from "../../utils/pathUtils";
 import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 
@@ -14,7 +13,65 @@ const PhotoDateCheck = () => {
   const [resultPath, setResultPath] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  
+  // Validation states
+  const [errors, setErrors] = useState({
+    folderPath: "",
+    resultPath: "",
+  });
+  const [touched, setTouched] = useState({});
+
+  const validateField = (fieldName, value) => {
+    let error = "";
+    
+    switch (fieldName) {
+      case "folderPath":
+        if (!value || value.trim() === "") {
+          error = "ფოლდერის მისამართი აუცილებელია";
+        }
+        break;
+      
+      case "resultPath":
+        if (!value || value.trim() === "") {
+          error = "შედეგის მისამართი აუცილებელია";
+        }
+        break;
+      
+      default:
+        break;
+    }
+    
+    setErrors((prev) => ({ ...prev, [fieldName]: error }));
+    return error === "";
+  };
+
+  const validateAllFields = () => {
+    const fieldsToValidate = [
+      { name: "folderPath", value: folderPath },
+      { name: "resultPath", value: resultPath },
+    ];
+
+    let isValid = true;
+    fieldsToValidate.forEach(({ name, value }) => {
+      if (!validateField(name, value)) {
+        isValid = false;
+      }
+    });
+
+    setTouched({
+      folderPath: true,
+      resultPath: true,
+    });
+
+    return isValid;
+  };
+
+  const handleBlur = (fieldName, value) => {
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName, value);
+  };
 
   const showPickerWarning = () =>
     setStatus({
@@ -48,18 +105,33 @@ const PhotoDateCheck = () => {
   const pickFolder = () => requestFolderFromPicker(setFolderPath);
   const pickResultFolder = () => requestFolderFromPicker(setResultPath);
 
-  const pasteFromClipboard = async (setter) => {
-    try {
-      const text = await navigator.clipboard.readText();
-      setter(sanitizeWindowsPath(text));
-    } catch {
+  const handleSubmitClick = () => {
+    // Validate all fields before showing confirmation modal
+    if (!validateAllFields()) {
       setStatus({
         type: "error",
-        text: "კლიპბორდიდან ჩასმა ვერ მოხერხდა. სცადეთ Ctrl + V.",
+        text: "გთხოვთ შეავსოთ ყველა აუცილებელი ველი სწორად.",
       });
+      return;
     }
+    // Show confirmation modal
+    setShowConfirmationModal(true);
   };
-  const handleSubmit = async () => {
+
+  const handleConfirm = async () => {
+    // Close modal
+    setShowConfirmationModal(false);
+    
+    // Proceed with submission
+    await executeSubmit();
+  };
+
+  const handleCancel = () => {
+    // Just close the modal
+    setShowConfirmationModal(false);
+  };
+
+  const executeSubmit = async () => {
     setStatus(null);
     setLoading(true);
 
@@ -91,52 +163,72 @@ const PhotoDateCheck = () => {
     }
   };
   return (
-    <div className="main-container">
+    <div>
+      <header className="header">ფოტოების თარიღის შემოწმება</header>
       <Link className="back-button" to="/qarsafariNavigator">
         &#8592; უკან
       </Link>
-      <div className="content-container">
-        <div className="item-row">
-          <label>ამოირჩიეთ ფაილი სადაც არის ფოტოები</label>
-          <div style={{ display: "flex", gap: "20px" }}>
+      <div className="Main-for-eqselisWakitxva">
+        <div className="obtainer">
+          {/* Folder Path - Full Width */}
+          <div className="row-excel1 full-width">
+            <label>ამოირჩიეთ ფაილი სადაც არის ფოტოები</label>
             <input
               type="text"
               value={folderPath}
-              onChange={(event) => setFolderPath(event.target.value)}
+              onChange={(e) => {
+                setFolderPath(e.target.value);
+                if (touched.folderPath) {
+                  validateField("folderPath", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("folderPath", e.target.value)}
+              className={errors.folderPath && touched.folderPath ? "input-error" : ""}
               placeholder="შეიტანეთ სერვერზე არსებული ფოტოების მისამართი"
             />
-            <button onClick={pickFolder} title="ამოირჩიეთ ფოლდერი (ბეტა)">ამორჩევა</button>
           </div>
-          <PathInputActions
-            onPaste={() => pasteFromClipboard(setFolderPath)}
-            onClear={() => setFolderPath("")}
-          />
-        </div>
-        <div className="item-row">
-          <label>ამოირჩიეთ მისამართი სადაც უნდა ჩაიწეროს შედეგი</label>
-          <div style={{ display: "flex", gap: "20px" }}>
+
+          {/* Result Path - Full Width */}
+          <div className="row-excel1 full-width">
+            <label>ამოირჩიეთ მისამართი სადაც უნდა ჩაიწეროს შედეგი</label>
             <input
               type="text"
               value={resultPath}
-              onChange={(event) => setResultPath(event.target.value)}
+              onChange={(e) => {
+                setResultPath(e.target.value);
+                if (touched.resultPath) {
+                  validateField("resultPath", e.target.value);
+                }
+              }}
+              onBlur={(e) => handleBlur("resultPath", e.target.value)}
+              className={errors.resultPath && touched.resultPath ? "input-error" : ""}
               placeholder="შეიტანეთ სერვერზე არსებული შედეგების მისამართი"
             />
-            <button onClick={pickResultFolder} title="ამოირჩიეთ ფოლდერი (ბეტა)">ამორჩევა</button>
           </div>
-          <PathInputActions
-            onPaste={() => pasteFromClipboard(setResultPath)}
-            onClear={() => setResultPath("")}
-          />
+
+          {/* Buttons */}
+          <div className="row-excel-buttons">
+            <button onClick={handleSubmitClick} disabled={loading}>
+              {loading ? "მუშავდება..." : "წაკითხვა"}
+            </button>
+            <Link className="gadavifiqre-btn" to="/qarsafariNavigator">
+              გადავიფიქრე
+            </Link>
+            {loading && <div className="spinner"></div>}
+          </div>
+          <StatusMessage status={status} />
         </div>
-        <div style={{ display: "flex", gap: "20px" }}>
-          <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "მუშავდება..." : "წაკითხვა"}
-          </button>
-          {loading && <div className="spinner"></div>}
-          <button>2</button>
-        </div>
-        <StatusMessage status={status} />
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        message="დარწმუნებული ხართ რომ მზადააა გასაშვებად?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="დიახ"
+        cancelText="არა"
+      />
     </div>
   );
 };
