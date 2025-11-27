@@ -11,6 +11,7 @@ import { getFriendlyErrorMessage } from "../../utils/errorUtils";
 const EqselisPirveliEtapiWakitxva = () => {
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  // Default path for Access file uploads
   const [UnicID, setUnicID] = useState(1);
   const [folderPath, setFolderPath] = useState("");
   const [gadanomriliaUNIQID, setGadanomriliaUNIQID] = useState(false);
@@ -117,11 +118,10 @@ const EqselisPirveliEtapiWakitxva = () => {
   }, [gadanomriliaFotoebi, gadanomrilia,folderStartCountingNumber]);
 
   // Handle file selection to read .mdb file and extract tables
+ 
   const handleAccessFileChange = async (e) => {
     const file = e.target.files[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     // Check if file is .mdb or .accdb
     if (!file.name.match(/\.(mdb|accdb)$/i)) {
@@ -132,64 +132,55 @@ const EqselisPirveliEtapiWakitxva = () => {
       return;
     }
 
-    // Get the full file path
-    let filePath = null;
-    
-
-    
-    // In Electron, try to get the full path
-    if (window.require) {
-      try {
-        // Try to get path from file object
-        if (file.path) {
-          
-          const path = window.require('path');
-          // Normalize the path to ensure it's absolute
-          filePath = path.resolve(file.path);
-        } else {
-          // Fallback: use Electron dialog to get the path
-          const { dialog } = window.require('@electron/remote');
-          const result = await dialog.showOpenDialog({
-            properties: ['openFile'],
-            filters: [
-              { name: 'Access Files', extensions: ['mdb', 'accdb'] }
-            ],
-            defaultPath: file.name
-          });
-          
-          if (!result.canceled && result.filePaths && result.filePaths.length > 0) {
-            filePath = result.filePaths[0];
-          }
-        }
-      } catch (error) {
-        console.error("Error getting file path:", error);
-        filePath = file.name; // Fallback to filename
-      }
-    } else {
-      // Browser fallback
-      filePath = file.name;
-    }
-
-    if (!filePath) {
-      setStatus({
-        type: "error",
-        text: "ვერ მოიძებნა ფაილის მისამართი",
-      });
-      return;
-    }
-
-    // Set the file path in the input field
-    console.log("Selected file path:", filePath);
-    setAccessFilePath(filePath);
-    if (touched.accessFilePath) {
-      validateField("accessFilePath", filePath);
-    }
-
     setLoadingTables(true);
     setAccessTables([]);
     setAccessShitName("");
+    setStatus({
+      type: "info",
+      text: "ფაილი იტვირთება სერვერზე...",
+    });
 
     try {
+      // Step 1: Upload file to server
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${API_BASE_URL}/upload-access`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Upload failed");
+      }
+
+      // Get the saved file path from server
+      const savedPath = result.savedPath || result.path || result.filePath;
+      
+      if (!savedPath) {
+        throw new Error("სერვერმა არ დააბრუნა ფაილის მისამართი");
+      }
+
+      console.log("File uploaded successfully. Saved path:", savedPath);
+
+      // Set the server path in the input field
+      setAccessFilePath(savedPath);
+      if (touched.accessFilePath) {
+        validateField("accessFilePath", savedPath);
+      }
+
+      setStatus({
+        type: "success",
+        text: `ფაილი წარმატებით აიტვირთა: ${savedPath}`,
+      });
+
+      // Step 2: Read tables from the uploaded file
+      setStatus({
+        type: "info",
+      });
+
       // Read file as ArrayBuffer for table extraction
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
@@ -205,20 +196,26 @@ const EqselisPirveliEtapiWakitxva = () => {
       
       console.log("Found tables:", userTables);
       
+      // Set tables
       setAccessTables(userTables);
+
+
     } catch (error) {
-      console.error("Error reading Access file:", error);
+      console.error("Error uploading/reading Access file:", error);
       setStatus({
         type: "error",
-        text: `ფაილის წაკითხვის შეცდომა: ${error.message}`,
+        text: getFriendlyErrorMessage(
+          error,
+          `ფაილის ატვირთვის/წაკითხვის შეცდომა: ${error.message}`
+        ),
       });
       setAccessTables([]);
     } finally {
       setLoadingTables(false);
-      // Reset file input so same file can be selected again
-      e.target.value = '';
+      e.target.value = ""; // reset input
     }
   };
+
 
   // Read Access file and extract tables from file path
   const readAccessFileForTables = async (filePath) => {
@@ -620,7 +617,7 @@ const EqselisPirveliEtapiWakitxva = () => {
                           filters: [
                             { name: 'Access Files', extensions: ['mdb', 'accdb'] }
                           ],
-                          title: 'აირჩიეთ Access ფაილი'
+                          title: 'აირჩიეთ Access ფაილი',
                         });
 
                         if (!result.canceled && result.filePaths && result.filePaths.length > 0) {
