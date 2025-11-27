@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import * as XLSX from "xlsx";
+import MDBReader from "mdb-reader";
 import "../../Styles/Qarsafari/eqselisWakitxva.css";
 import StatusMessage from "../common/StatusMessage";
 import ConfirmationModal from "../common/ConfirmationModal";
@@ -36,10 +37,12 @@ const EqselisPirveliEtapiWakitxva = () => {
   const [ExcelPath, setExcelPath] = useState("");
   const [newExcelDestination, setNewExcelDestination] = useState("");
   const [accessFilePath, setAccessFilePath] = useState("");
-  const [calcVarjisFarti, setCalcVarjisFarti] = useState(false);
+  const [calcVarjisFarti, setCalcVarjisFarti] = useState(true);
   const [options, setOptions] = useState([]);
   const [etapiOptions, setEtapiOptions] = useState([]);
   const [accessShitName, setAccessShitName] = useState("");
+  const [accessTables, setAccessTables] = useState([]);
+  const [loadingTables, setLoadingTables] = useState(false);
   const [projectNameID, setProjectNameID] = useState(0);
   const [etapiID, setEtapiID] = useState(0);
   const [folderStartCountingNumber, setFolderStartCountingNumber] = useState(1);
@@ -112,6 +115,114 @@ const EqselisPirveliEtapiWakitxva = () => {
       validateField("folderStartCountingNumber", folderStartCountingNumber);
     }
   }, [gadanomriliaFotoebi, gadanomrilia,folderStartCountingNumber]);
+
+  // Handle file selection to read .mdb file and extract tables
+  const handleAccessFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    // Check if file is .mdb or .accdb
+    if (!file.name.match(/\.(mdb|accdb)$/i)) {
+      setStatus({
+        type: "error",
+        text: "გთხოვთ აირჩიოთ .mdb ან .accdb ფაილი",
+      });
+      return;
+    }
+
+    // Set the file path in the input field
+    // In Electron, file.path contains the full path; in browser, only file.name is available
+    const filePath = file.path || file.name;
+    setAccessFilePath(filePath);
+    if (touched.accessFilePath) {
+      validateField("accessFilePath", filePath);
+    }
+
+    setLoadingTables(true);
+    setAccessTables([]);
+    setAccessShitName("");
+
+    try {
+      // Read file as ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      
+      // Create MDBReader instance
+      const reader = new MDBReader(buffer);
+      
+      // Get all table names
+      const tableNames = reader.getTableNames();
+      
+      // Filter out system tables (usually start with MSys)
+      const userTables = tableNames.filter(name => !name.startsWith('MSys') && !name.startsWith('~'));
+      
+      console.log("Found tables:", userTables);
+      
+      setAccessTables(userTables);
+    } catch (error) {
+      console.error("Error reading Access file:", error);
+      setStatus({
+        type: "error",
+        text: `ფაილის წაკითხვის შეცდომა: ${error.message}`,
+      });
+      setAccessTables([]);
+    } finally {
+      setLoadingTables(false);
+      // Reset file input so same file can be selected again
+      e.target.value = '';
+    }
+  };
+
+  // Read Access file and extract tables from file path
+  const readAccessFileForTables = async (filePath) => {
+    setLoadingTables(true);
+    setAccessTables([]);
+    setAccessShitName("");
+
+    try {
+      // In Electron, we can read the file directly
+      if (window.require) {
+        const fs = window.require('fs');
+        const fileBuffer = fs.readFileSync(filePath);
+        const buffer = Buffer.from(fileBuffer);
+        
+        // Create MDBReader instance
+        const reader = new MDBReader(buffer);
+        
+        // Get all table names
+        const tableNames = reader.getTableNames();
+        
+        // Filter out system tables (usually start with MSys)
+        const userTables = tableNames.filter(name => !name.startsWith('MSys') && !name.startsWith('~'));
+        
+        console.log("Found tables:", userTables);
+        
+        if (userTables.length === 0) {
+          setStatus({
+            type: "error",
+            text: "ცხრილები ვერ მოიძებნა Access ფაილში",
+          });
+        } else {
+          setAccessTables(userTables);
+          setStatus({
+            type: "success",
+            text: `ნაპოვნია ${userTables.length} ცხრილი`,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error reading Access file:", error);
+      setStatus({
+        type: "error",
+        text: `ფაილის წაკითხვის შეცდომა: ${error.message}`,
+      });
+      setAccessTables([]);
+    } finally {
+      setLoadingTables(false);
+    }
+  };
 
   const validateField = (fieldName, value) => {
     let error = "";
@@ -351,13 +462,13 @@ const EqselisPirveliEtapiWakitxva = () => {
               }}
               onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
               className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
-              placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი სერვერზე"
+              placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი"
               title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
             />
           </div>
 
           {/* Checkboxes Row */}
-          <div className="row-excel1">
+          {/*<div className="row-excel1">
             <div className="checkbox-group">
               <input
                 value={calcVarjisFarti}
@@ -370,7 +481,7 @@ const EqselisPirveliEtapiWakitxva = () => {
               </label>
             </div>
           </div>
-
+            */}
           
           
           
@@ -394,40 +505,144 @@ const EqselisPirveliEtapiWakitxva = () => {
             />
           </div>
 
-          {/* Access File - Two Columns */}
-          <div className="row-excel1">
-            <label>Access შიტის სახელი</label>
-            <input
-              type="text"
-              value={accessShitName}
-              onChange={(e) => {
-                setAccessShitName(e.target.value);
-                if (touched.accessShitName) {
-                  validateField("accessShitName", e.target.value);
-                }
-              }}
-              onBlur={(e) => handleBlur("accessShitName", e.target.value)}
-              className={errors.accessShitName && touched.accessShitName ? "input-error" : ""}
-              placeholder="შეიყვანეთ შიტის სახელი"
-            />
-          </div>
-
+          {/* Access File - File Selection First */}
           <div className="row-excel1">
             <label>Access ფაილის მისამართი</label>
-            <input
-              type="text"
-              value={accessFilePath}
-              onChange={(e) => {
-                setAccessFilePath(e.target.value);
-                if (touched.accessFilePath) {
-                  validateField("accessFilePath", e.target.value);
-                }
-              }}
-              onBlur={(e) => handleBlur("accessFilePath", e.target.value)}
-              className={errors.accessFilePath && touched.accessFilePath ? "input-error" : ""}
-              placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი"
-              title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი."
-            />
+            <div style={{ position: "relative", width: "100%" }}>
+              <input
+                type="text"
+                value={accessFilePath}
+                onChange={(e) => {
+                  setAccessFilePath(e.target.value);
+                  if (touched.accessFilePath) {
+                    validateField("accessFilePath", e.target.value);
+                  }
+                  // Clear tables when path changes manually
+                  if (accessTables.length > 0) {
+                    setAccessTables([]);
+                    setAccessShitName("");
+                  }
+                }}
+                onBlur={async (e) => {
+                  handleBlur("accessFilePath", e.target.value);
+                  // Try to read tables if path is valid and in Electron
+                  if (e.target.value && e.target.value.match(/\.(mdb|accdb)$/i) && window.require) {
+                    await readAccessFileForTables(e.target.value);
+                  }
+                }}
+                onKeyPress={async (e) => {
+                  if (e.key === 'Enter') {
+                    // Try to read tables if path is valid and in Electron
+                    if (accessFilePath && accessFilePath.match(/\.(mdb|accdb)$/i) && window.require) {
+                      await readAccessFileForTables(accessFilePath);
+                    }
+                  }
+                }}
+                className={errors.accessFilePath && touched.accessFilePath ? "input-error" : ""}
+                placeholder="შეიყვანეთ .mdb ფაილის სრული მისამართი ან აირჩიეთ ფაილი"
+                title="მიუთითეთ სერვერზე არსებული Access (.mdb) ფაილის სრული მისამართი ან აირჩიეთ ფაილი ცხრილების სანახავად."
+                style={{
+                  width: "100%",
+                  paddingRight: loadingTables ? "50px" : "120px",
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  height: "42px",
+                  border: errors.accessFilePath && touched.accessFilePath ? "1px solid #dc3545" : "1px solid #bdc3c7",
+                  borderRadius: "6px",
+                }}
+              />
+              <div style={{ 
+                position: "absolute", 
+                right: "5px", 
+                top: "50%", 
+                transform: "translateY(-50%)",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px"
+              }}>
+                {loadingTables && (
+                  <div className="spinner" style={{ width: "20px", height: "20px", marginRight: "5px" }}></div>
+                )}
+                <label
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: loadingTables ? "#ccc" : "#4caf50",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: loadingTables ? "not-allowed" : "pointer",
+                    fontSize: "13px",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    margin: 0
+                  }}
+                >
+                  {loadingTables ? "იტვირთება..." : "აირჩიეთ"}
+                  <input
+                    type="file"
+                    accept=".mdb,.accdb"
+                    onChange={handleAccessFileChange}
+                    disabled={loadingTables}
+                    style={{ display: "none" }}
+                    title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
+                  />
+                </label>
+              </div>
+            </div>
+            <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+              შეგიძლიათ შეიყვანოთ მისამართი ხელით ან აირჩიოთ ფაილი ცხრილების სანახავად
+            </div>
+          </div>
+
+          {/* Access Table Selection - After File Selection */}
+          <div className="row-excel1">
+            <label>Access შიტის სახელი</label>
+            {loadingTables ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <input
+                  type="text"
+                  value="იტვირთება..."
+                  disabled
+                  style={{ flex: 1 }}
+                />
+                <div className="spinner" style={{ width: "20px", height: "20px" }}></div>
+              </div>
+            ) : (
+              <select
+                value={accessShitName}
+                onChange={(e) => {
+                  setAccessShitName(e.target.value);
+                  if (touched.accessShitName) {
+                    validateField("accessShitName", e.target.value);
+                  }
+                }}
+                onBlur={(e) => handleBlur("accessShitName", e.target.value)}
+                className={errors.accessShitName && touched.accessShitName ? "select-error" : ""}
+                disabled={accessTables.length === 0}
+                style={{
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  height: "42px",
+                  width: "100%",
+                  border: errors.accessShitName && touched.accessShitName ? "1px solid #dc3545" : "1px solid #bdc3c7",
+                  borderRadius: "6px",
+                  backgroundColor: accessTables.length === 0 ? "#f5f5f5" : "#ffffff",
+                  color: "#2c3e50",
+                  cursor: accessTables.length === 0 ? "not-allowed" : "pointer",
+                }}
+              >
+                <option value="">
+                  {accessTables.length === 0 
+                    ? "ჯერ აირჩიეთ Access ფაილი" 
+                    : "აირჩიეთ ცხრილი"}
+                </option>
+                {accessTables.map((table, index) => (
+                  <option key={index} value={table}>
+                    {table}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           
