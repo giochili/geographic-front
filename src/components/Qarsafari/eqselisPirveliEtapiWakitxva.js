@@ -132,9 +132,54 @@ const EqselisPirveliEtapiWakitxva = () => {
       return;
     }
 
+    // Get the full file path
+    let filePath = null;
+    
+
+    
+    // In Electron, try to get the full path
+    if (window.require) {
+      try {
+        // Try to get path from file object
+        if (file.path) {
+          
+          const path = window.require('path');
+          // Normalize the path to ensure it's absolute
+          filePath = path.resolve(file.path);
+        } else {
+          // Fallback: use Electron dialog to get the path
+          const { dialog } = window.require('@electron/remote');
+          const result = await dialog.showOpenDialog({
+            properties: ['openFile'],
+            filters: [
+              { name: 'Access Files', extensions: ['mdb', 'accdb'] }
+            ],
+            defaultPath: file.name
+          });
+          
+          if (!result.canceled && result.filePaths && result.filePaths.length > 0) {
+            filePath = result.filePaths[0];
+          }
+        }
+      } catch (error) {
+        console.error("Error getting file path:", error);
+        filePath = file.name; // Fallback to filename
+      }
+    } else {
+      // Browser fallback
+      filePath = file.name;
+    }
+
+    if (!filePath) {
+      setStatus({
+        type: "error",
+        text: "ვერ მოიძებნა ფაილის მისამართი",
+      });
+      return;
+    }
+
     // Set the file path in the input field
-    // In Electron, file.path contains the full path; in browser, only file.name is available
-    const filePath = file.path || file.name;
+    console.log("Selected file path:", filePath);
     setAccessFilePath(filePath);
     if (touched.accessFilePath) {
       validateField("accessFilePath", filePath);
@@ -145,7 +190,7 @@ const EqselisPirveliEtapiWakitxva = () => {
     setAccessShitName("");
 
     try {
-      // Read file as ArrayBuffer
+      // Read file as ArrayBuffer for table extraction
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       
@@ -185,7 +230,17 @@ const EqselisPirveliEtapiWakitxva = () => {
       // In Electron, we can read the file directly
       if (window.require) {
         const fs = window.require('fs');
-        const fileBuffer = fs.readFileSync(filePath);
+        const path = window.require('path');
+        
+        // Normalize the path - handle network paths and regular paths
+        let normalizedPath = filePath;
+        if (!filePath.startsWith('\\\\') && !path.isAbsolute(filePath)) {
+          // If it's a relative path, resolve it
+          normalizedPath = path.resolve(filePath);
+        }
+        
+        console.log("Reading Access file from path:", normalizedPath);
+        const fileBuffer = fs.readFileSync(normalizedPath);
         const buffer = Buffer.from(fileBuffer);
         
         // Create MDBReader instance
@@ -199,18 +254,7 @@ const EqselisPirveliEtapiWakitxva = () => {
         
         console.log("Found tables:", userTables);
         
-        if (userTables.length === 0) {
-          setStatus({
-            type: "error",
-            text: "ცხრილები ვერ მოიძებნა Access ფაილში",
-          });
-        } else {
-          setAccessTables(userTables);
-          setStatus({
-            type: "success",
-            text: `ნაპოვნია ${userTables.length} ცხრილი`,
-          });
-        }
+        setAccessTables(userTables);
       }
     } catch (error) {
       console.error("Error reading Access file:", error);
@@ -563,7 +607,48 @@ const EqselisPirveliEtapiWakitxva = () => {
                 {loadingTables && (
                   <div className="spinner" style={{ width: "20px", height: "20px", marginRight: "5px" }}></div>
                 )}
-                <label
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (loadingTables) return;
+                    
+                    try {
+                      if (window.require) {
+                        const { dialog } = window.require('@electron/remote');
+                        const result = await dialog.showOpenDialog({
+                          properties: ['openFile'],
+                          filters: [
+                            { name: 'Access Files', extensions: ['mdb', 'accdb'] }
+                          ],
+                          title: 'აირჩიეთ Access ფაილი'
+                        });
+
+                        if (!result.canceled && result.filePaths && result.filePaths.length > 0) {
+                          const selectedPath = result.filePaths[0];
+                          console.log("Selected file path:", selectedPath);
+                          
+                          // Set the path
+                          setAccessFilePath(selectedPath);
+                          if (touched.accessFilePath) {
+                            validateField("accessFilePath", selectedPath);
+                          }
+                          
+                          // Read tables from the file
+                          await readAccessFileForTables(selectedPath);
+                        }
+                      } else {
+                        // Fallback: trigger file input click
+                        document.getElementById('accessFileInput')?.click();
+                      }
+                    } catch (error) {
+                      console.error("Error selecting Access file:", error);
+                      setStatus({
+                        type: "error",
+                        text: `ფაილის არჩევის შეცდომა: ${error.message}`,
+                      });
+                    }
+                  }}
+                  disabled={loadingTables}
                   style={{
                     padding: "6px 12px",
                     backgroundColor: loadingTables ? "#ccc" : "#4caf50",
@@ -573,20 +658,21 @@ const EqselisPirveliEtapiWakitxva = () => {
                     cursor: loadingTables ? "not-allowed" : "pointer",
                     fontSize: "13px",
                     whiteSpace: "nowrap",
-                    display: "inline-block",
                     margin: 0
                   }}
+                  title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
                 >
                   {loadingTables ? "იტვირთება..." : "აირჩიეთ"}
-                  <input
-                    type="file"
-                    accept=".mdb,.accdb"
-                    onChange={handleAccessFileChange}
-                    disabled={loadingTables}
-                    style={{ display: "none" }}
-                    title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
-                  />
-                </label>
+                </button>
+                <input
+                  type="file"
+                  accept=".mdb,.accdb"
+                  onChange={handleAccessFileChange}
+                  disabled={loadingTables}
+                  style={{ display: "none" }}
+                  id="accessFileInput"
+                  title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
+                />
               </div>
             </div>
             <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
