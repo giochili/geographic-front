@@ -112,12 +112,10 @@ const EqselisWakitxva = () => {
     }
   }, [gadanomriliaFotoebi, gadanomrilia]);
 
-  // Handle file selection to read .mdb file and extract tables
+  // Handle Access file selection - upload to server and then read tables
   const handleAccessFileChange = async (e) => {
     const file = e.target.files[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     // Check if file is .mdb or .accdb
     if (!file.name.match(/\.(mdb|accdb)$/i)) {
@@ -128,20 +126,57 @@ const EqselisWakitxva = () => {
       return;
     }
 
-    // Set the file path in the input field
-    // In Electron, file.path contains the full path; in browser, only file.name is available
-    const filePath = file.path || file.name;
-    setAccessFilePath(filePath);
-    if (touched.accessFilePath) {
-      validateField("accessFilePath", filePath);
-    }
-
     setLoadingTables(true);
     setAccessTables([]);
     setAccessShitName("");
+    setStatus({
+      type: "info",
+      text: "ფაილი იტვირთება სერვერზე...",
+    });
 
     try {
-      // Read file as ArrayBuffer
+      // Step 1: Upload file to server
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${API_BASE_URL}/upload-access`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Upload failed");
+      }
+
+      // Get the saved file path from server
+      const savedPath = result.savedPath || result.path || result.filePath;
+      
+      if (!savedPath) {
+        throw new Error("სერვერმა არ დააბრუნა ფაილის მისამართი");
+      }
+
+      console.log("File uploaded successfully. Saved path:", savedPath);
+
+      // Set the server path in the input field
+      setAccessFilePath(savedPath);
+      if (touched.accessFilePath) {
+        validateField("accessFilePath", savedPath);
+      }
+
+      setStatus({
+        type: "success",
+        text: `ფაილი წარმატებით აიტვირთა: ${savedPath}`,
+      });
+
+      // Step 2: Read tables from the uploaded file
+      setStatus({
+        type: "info",
+        text: "ცხრილების წაკითხვა...",
+      });
+
+      // Read file as ArrayBuffer for table extraction
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       
@@ -156,18 +191,91 @@ const EqselisWakitxva = () => {
       
       console.log("Found tables:", userTables);
       
+      // Set tables
       setAccessTables(userTables);
+
     } catch (error) {
-      console.error("Error reading Access file:", error);
+      console.error("Error uploading/reading Access file:", error);
       setStatus({
         type: "error",
-        text: `ფაილის წაკითხვის შეცდომა: ${error.message}`,
+        text: getFriendlyErrorMessage(
+          error,
+          `ფაილის ატვირთვის/წაკითხვის შეცდომა: ${error.message}`
+        ),
       });
       setAccessTables([]);
     } finally {
       setLoadingTables(false);
-      // Reset file input so same file can be selected again
-      e.target.value = '';
+      e.target.value = ""; // reset input
+    }
+  };
+
+  // Handle Excel file selection - upload to server and get saved path
+  const handleExcelFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check if file is .xlsx or .xls
+    if (!file.name.match(/\.(xlsx|xls)$/i)) {
+      setStatus({
+        type: "error",
+        text: "გთხოვთ აირჩიოთ .xlsx ან .xls ფაილი",
+      });
+      return;
+    }
+
+    setStatus({
+      type: "info",
+      text: "Excel ფაილი იტვირთება სერვერზე...",
+    });
+
+    try {
+      // Step 1: Upload file to server
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${API_BASE_URL}/upload-excel`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Upload failed");
+      }
+
+      // Get the saved file path from server
+      const savedPath = result.savedPath || result.path || result.filePath;
+      
+      if (!savedPath) {
+        throw new Error("სერვერმა არ დააბრუნა ფაილის მისამართი");
+      }
+
+      console.log("Excel file uploaded successfully. Saved path:", savedPath);
+
+      // Set the server path in the input field
+      setExcelPath(savedPath);
+      if (touched.ExcelPath) {
+        validateField("ExcelPath", savedPath);
+      }
+
+      setStatus({
+        type: "success",
+        text: `Excel ფაილი წარმატებით აიტვირთა: ${savedPath}`,
+      });
+
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      setStatus({
+        type: "error",
+        text: getFriendlyErrorMessage(
+          error,
+          `Excel ფაილის ატვირთვის შეცდომა: ${error.message}`
+        ),
+      });
+    } finally {
+      e.target.value = ""; // reset input
     }
   };
 
@@ -417,20 +525,72 @@ const EqselisWakitxva = () => {
           {/* Excel Path - Full Width */}
           <div className="row-excel1 full-width">
             <label>ამოირჩიეთ ექსელის ფაილი</label>
-            <input
-              type="text"
-              value={ExcelPath}
-              onChange={(e) => {
-                setExcelPath(e.target.value);
-                if (touched.ExcelPath) {
-                  validateField("ExcelPath", e.target.value);
-                }
-              }}
-              onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
-              className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
-              placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი"
-              title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
-            />
+            <div style={{ position: "relative", width: "100%" }}>
+              <input
+                type="text"
+                value={ExcelPath}
+                onChange={(e) => {
+                  setExcelPath(e.target.value);
+                  if (touched.ExcelPath) {
+                    validateField("ExcelPath", e.target.value);
+                  }
+                }}
+                onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
+                className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
+                placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი ან აირჩიეთ ფაილი"
+                title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი ან აირჩიეთ ფაილი ატვირთვისთვის."
+                style={{
+                  width: "100%",
+                  paddingRight: "120px",
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  height: "42px",
+                  border: errors.ExcelPath && touched.ExcelPath ? "1px solid #dc3545" : "1px solid #bdc3c7",
+                  borderRadius: "6px",
+                }}
+              />
+              <div style={{ 
+                position: "absolute", 
+                right: "5px", 
+                top: "50%", 
+                transform: "translateY(-50%)",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px"
+              }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    document.getElementById('excelFileInput')?.click();
+                  }}
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: "#4caf50",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    whiteSpace: "nowrap",
+                    margin: 0
+                  }}
+                  title="აირჩიეთ Excel ფაილი ატვირთვისთვის"
+                >
+                  აირჩიეთ
+                </button>
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleExcelFileChange}
+                  style={{ display: "none" }}
+                  id="excelFileInput"
+                  title="აირჩიეთ Excel ფაილი ატვირთვისთვის"
+                />
+              </div>
+            </div>
+            <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+              შეგიძლიათ შეიყვანოთ მისამართი ხელით ან აირჩიოთ ფაილი ატვირთვისთვის
+            </div>
           </div>
 
           {/* Checkboxes Row */}
@@ -572,7 +732,13 @@ const EqselisWakitxva = () => {
                 {loadingTables && (
                   <div className="spinner" style={{ width: "20px", height: "20px", marginRight: "5px" }}></div>
                 )}
-                <label
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (loadingTables) return;
+                    document.getElementById('accessFileInput')?.click();
+                  }}
+                  disabled={loadingTables}
                   style={{
                     padding: "6px 12px",
                     backgroundColor: loadingTables ? "#ccc" : "#4caf50",
@@ -582,20 +748,21 @@ const EqselisWakitxva = () => {
                     cursor: loadingTables ? "not-allowed" : "pointer",
                     fontSize: "13px",
                     whiteSpace: "nowrap",
-                    display: "inline-block",
                     margin: 0
                   }}
+                  title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
                 >
                   {loadingTables ? "იტვირთება..." : "აირჩიეთ"}
-                  <input
-                    type="file"
-                    accept=".mdb,.accdb"
-                    onChange={handleAccessFileChange}
-                    disabled={loadingTables}
-                    style={{ display: "none" }}
-                    title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
-                  />
-                </label>
+                </button>
+                <input
+                  type="file"
+                  accept=".mdb,.accdb"
+                  onChange={handleAccessFileChange}
+                  disabled={loadingTables}
+                  style={{ display: "none" }}
+                  id="accessFileInput"
+                  title="აირჩიეთ Access ფაილი ცხრილების სანახავად"
+                />
               </div>
             </div>
             <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
