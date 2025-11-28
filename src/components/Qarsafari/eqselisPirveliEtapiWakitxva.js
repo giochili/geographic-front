@@ -217,6 +217,75 @@ const EqselisPirveliEtapiWakitxva = () => {
   };
 
 
+  // Handle Excel file selection - upload to server and get saved path
+  const handleExcelFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check if file is .xlsx or .xls
+    if (!file.name.match(/\.(xlsx|xls)$/i)) {
+      setStatus({
+        type: "error",
+        text: "გთხოვთ აირჩიოთ .xlsx ან .xls ფაილი",
+      });
+      return;
+    }
+
+    setStatus({
+      type: "info",
+      text: "Excel ფაილი იტვირთება სერვერზე...",
+    });
+
+    try {
+      // Step 1: Upload file to server
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${API_BASE_URL}/upload-excel`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Upload failed");
+      }
+
+      // Get the saved file path from server
+      const savedPath = result.savedPath || result.path || result.filePath;
+      
+      if (!savedPath) {
+        throw new Error("სერვერმა არ დააბრუნა ფაილის მისამართი");
+      }
+
+      console.log("Excel file uploaded successfully. Saved path:", savedPath);
+
+      // Set the server path in the input field
+      setExcelPath(savedPath);
+      if (touched.ExcelPath) {
+        validateField("ExcelPath", savedPath);
+      }
+
+      setStatus({
+        type: "success",
+        text: `Excel ფაილი წარმატებით აიტვირთა: ${savedPath}`,
+      });
+
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      setStatus({
+        type: "error",
+        text: getFriendlyErrorMessage(
+          error,
+          `Excel ფაილის ატვირთვის შეცდომა: ${error.message}`
+        ),
+      });
+    } finally {
+      e.target.value = ""; // reset input
+    }
+  };
+
   // Read Access file and extract tables from file path
   const readAccessFileForTables = async (filePath) => {
     setLoadingTables(true);
@@ -492,20 +561,72 @@ const EqselisPirveliEtapiWakitxva = () => {
           {/* Excel Path - Full Width */}
           <div className="row-excel1 full-width">
             <label>ჩასვით ექსელის ფაილი</label>
-            <input
-              type="text"
-              value={ExcelPath}
-              onChange={(e) => {
-                setExcelPath(e.target.value);
-                if (touched.ExcelPath) {
-                  validateField("ExcelPath", e.target.value);
-                }
-              }}
-              onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
-              className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
-              placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი"
-              title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი."
-            />
+            <div style={{ position: "relative", width: "100%" }}>
+              <input
+                type="text"
+                value={ExcelPath}
+                onChange={(e) => {
+                  setExcelPath(e.target.value);
+                  if (touched.ExcelPath) {
+                    validateField("ExcelPath", e.target.value);
+                  }
+                }}
+                onBlur={(e) => handleBlur("ExcelPath", e.target.value)}
+                className={errors.ExcelPath && touched.ExcelPath ? "input-error" : ""}
+                placeholder="შეიყვანეთ .xlsx ფაილის სრული მისამართი ან აირჩიეთ ფაილი"
+                title="მიუთითეთ სერვერზე არსებული ექსელის ფაილის სრული მისამართი ან აირჩიეთ ფაილი ატვირთვისთვის."
+                style={{
+                  width: "100%",
+                  paddingRight: "120px",
+                  padding: "10px 12px",
+                  fontSize: "15px",
+                  height: "42px",
+                  border: errors.ExcelPath && touched.ExcelPath ? "1px solid #dc3545" : "1px solid #bdc3c7",
+                  borderRadius: "6px",
+                }}
+              />
+              <div style={{ 
+                position: "absolute", 
+                right: "5px", 
+                top: "50%", 
+                transform: "translateY(-50%)",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px"
+              }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    document.getElementById('excelFileInput')?.click();
+                  }}
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: "#4caf50",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    whiteSpace: "nowrap",
+                    margin: 0
+                  }}
+                  title="აირჩიეთ Excel ფაილი ატვირთვისთვის"
+                >
+                  აირჩიეთ
+                </button>
+                <input
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleExcelFileChange}
+                  style={{ display: "none" }}
+                  id="excelFileInput"
+                  title="აირჩიეთ Excel ფაილი ატვირთვისთვის"
+                />
+              </div>
+            </div>
+            <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+              შეგიძლიათ შეიყვანოთ მისამართი ხელით ან აირჩიოთ ფაილი ატვირთვისთვის
+            </div>
           </div>
 
           {/* Checkboxes Row */}
