@@ -145,7 +145,7 @@ const EqselisPirveliEtapiWakitxva = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch(`${API_BASE_URL}/upload-access`, {
+      const response = await fetch(`${API_BASE_URL}/upload-access-pirveliEtapi`, {
         method: "POST",
         body: formData,
       });
@@ -233,7 +233,6 @@ const EqselisPirveliEtapiWakitxva = () => {
 
     setStatus({
       type: "info",
-      text: "Excel ფაილი იტვირთება სერვერზე...",
     });
 
     try {
@@ -241,7 +240,7 @@ const EqselisPirveliEtapiWakitxva = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch(`${API_BASE_URL}/upload-excel`, {
+      const response = await fetch(`${API_BASE_URL}/upload-excel-pirveliEtapi`, {
         method: "POST",
         body: formData,
       });
@@ -269,7 +268,6 @@ const EqselisPirveliEtapiWakitxva = () => {
 
       setStatus({
         type: "success",
-        text: `Excel ფაილი წარმატებით აიტვირთა: ${savedPath}`,
       });
 
     } catch (error) {
