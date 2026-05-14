@@ -131,7 +131,6 @@ const EqselisWakitxva = () => {
     setAccessShitName("");
     setStatus({
       type: "info",
-      text: "ფაილი იტვირთება სერვერზე...",
     });
 
     try {
@@ -167,13 +166,11 @@ const EqselisWakitxva = () => {
 
       setStatus({
         type: "success",
-        text: `ფაილი წარმატებით აიტვირთა: ${savedPath}`,
       });
 
       // Step 2: Read tables from the uploaded file
       setStatus({
         type: "info",
-        text: "ცხრილების წაკითხვა...",
       });
 
       // Read file as ArrayBuffer for table extraction
@@ -226,7 +223,6 @@ const EqselisWakitxva = () => {
 
     setStatus({
       type: "info",
-      text: "Excel ფაილი იტვირთება სერვერზე...",
     });
 
     try {
@@ -262,7 +258,6 @@ const EqselisWakitxva = () => {
 
       setStatus({
         type: "success",
-        text: `Excel ფაილი წარმატებით აიტვირთა: ${savedPath}`,
       });
 
     } catch (error) {
